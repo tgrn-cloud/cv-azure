@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AZ-900 Gym</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E8EAED;--surface:#FFFFFF;--ink:#16191D;--muted:#5C6570;--line:#C9CED4;
+  --d1:#2E8B57;--d2:#1E5AA8;--d3:#E0A800;--ex:#D7263D;
+  --ok:#2E8B57;--bad:#D7263D;--okbg:#E3F3EA;--badbg:#FBE5E8;--tipbg:#F1F3F5;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#1C2026;--surface:#262B33;--ink:#EEF1F4;--muted:#9AA4B0;--line:#3A414B;--okbg:#1E3A2B;--badbg:#45222A;--tipbg:#20252C}
+}
+:root[data-theme="dark"]{--bg:#1C2026;--surface:#262B33;--ink:#EEF1F4;--muted:#9AA4B0;--line:#3A414B;--okbg:#1E3A2B;--badbg:#45222A;--tipbg:#20252C}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 Barlow,"Segoe UI",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:560px;margin:0 auto;padding:14px 16px 48px}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",Impact,sans-serif;font-weight:800;line-height:1.08;letter-spacing:.005em}
+h2{font-size:28px;margin:22px 0 10px}
+h3{font-size:22px;margin:0 0 2px}
+p{margin:0 0 10px}
+button{font:inherit;color:inherit}
+.btn{font:600 16px/1.2 Barlow,system-ui,sans-serif;min-height:44px;padding:10px 16px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.ghost{background:transparent;border-color:transparent;padding-left:4px;padding-right:4px}
+.btn.small{font-size:15px;min-height:40px}
+.btn.wide{width:100%;margin-top:12px}
+button:focus-visible,input:focus-visible{outline:3px solid var(--d2);outline-offset:2px}
+
+/* hero */
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 14px 16px;text-align:center}
+.hero svg{width:100%;max-width:380px;height:auto;display:block;margin:0 auto}
+.kg{font-size:68px;margin:4px 0 0;font-variant-numeric:tabular-nums}
+.lv{font-weight:600;margin:2px 0 4px}
+.streak{color:var(--muted);margin:0}
+.intro{color:var(--muted);margin:14px 2px 0}
+
+/* stations */
+.stations{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.st{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:16px 14px}
+.st+.st{border-top:1px solid var(--line)}
+.plate{width:64px;height:64px;border-radius:50%;background:var(--c);display:grid;place-items:center;box-shadow:inset 0 0 0 5px rgba(0,0,0,.16),inset 0 0 0 7px rgba(255,255,255,.18);color:var(--pc,#fff);font:800 15px/1 "Barlow Condensed",sans-serif;text-align:center}
+.meta{color:var(--muted);font-size:15px;margin:0 0 10px}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.acts .btn{padding:8px 12px;min-height:40px;font-size:15px}
+
+.exam{background:var(--ex);color:#fff;border-radius:18px;padding:18px 16px;margin-top:18px}
+.exam h2{margin:0 0 6px;color:#fff}
+.exam p{color:#FFE3E6}
+.exam .btn{background:#fff;color:var(--ex);border-color:#fff;margin-top:4px}
+.foot{text-align:center;margin-top:24px}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:15px;min-height:40px}
+
+/* shared views */
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.count{color:var(--muted);font-weight:600;font-size:15px;display:flex;gap:10px;align-items:center}
+.timer{background:var(--ex);color:#fff;border-radius:8px;padding:2px 8px;font-variant-numeric:tabular-nums}
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:14px}
+.prog div{height:100%;background:var(--c);transition:width .3s}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.row .btn{flex:1 1 auto}
+
+.lesson{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 16px}
+.lesson h2{margin:0 0 10px;font-size:32px}
+.lesson .body p{margin-bottom:12px}
+.lesson ul{margin:0 0 12px;padding-left:20px}
+.lesson li{margin-bottom:4px}
+.tip{background:var(--tipbg);border-left:5px solid var(--c);border-radius:0 10px 10px 0;padding:10px 12px;margin-top:6px}
+.auto{display:flex;gap:10px;align-items:flex-start;margin-top:16px;color:var(--muted);font-size:15px;cursor:pointer}
+.auto input{width:22px;height:22px;margin-top:1px;accent-color:var(--c,var(--d2));flex:none}
+
+.qwrap .q{font-size:26px;margin:4px 0 14px;font-weight:600;line-height:1.15}
+.tag{color:var(--muted);font-size:15px;margin:0}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;min-height:52px;font-size:17px}
+.opt:disabled{cursor:default}
+.let{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--tipbg);font:800 16px/1 "Barlow Condensed",sans-serif}
+.opt.right{background:var(--okbg);border-color:var(--ok)}
+.opt.right .let{background:var(--ok);color:#fff}
+.opt.wrong{background:var(--badbg);border-color:var(--bad)}
+.opt.wrong .let{background:var(--bad);color:#fff}
+.opt.picked{border-color:var(--ink)}
+.fb{border-radius:12px;padding:12px 14px;margin-top:14px}
+.fb.ok{background:var(--okbg)}
+.fb.no{background:var(--badbg)}
+.fbh{font-weight:600;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.gain{background:var(--ok);color:#fff;border-radius:8px;padding:1px 8px;font:800 17px/1.4 "Barlow Condensed",sans-serif;animation:pop .5s ease-out}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+
+.result{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px 16px;text-align:center}
+.result h2{margin:6px 0 8px}
+.big{font-size:84px;margin:0;line-height:1;color:var(--c)}
+.review{margin-top:18px}
+.rv{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.rv .q2{font-weight:600;margin-bottom:6px}
+.rv .you{color:var(--bad)}
+.rv .corr{color:var(--ok);font-weight:600}
+.rv .ex{color:var(--muted);font-size:15px;margin:4px 0 0}
+
+.fc{width:100%;min-height:240px;background:var(--surface);border:1.5px solid var(--line);border-top:8px solid var(--c);border-radius:18px;padding:22px 18px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;text-align:center;cursor:pointer}
+.fc .term{font-size:34px}
+.fc .term-sm{font:800 20px/1.1 "Barlow Condensed",sans-serif;color:var(--muted)}
+.fc .def{font-size:19px;line-height:1.45}
+.fc .hint{color:var(--muted);font-size:15px}
+.fc.flipped{animation:flip .35s ease-out}
+@keyframes flip{0%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
+/* fun extras */
+.hero{position:relative}
+.snd{position:absolute;top:6px;right:6px;min-height:44px;min-width:44px;border:0;background:transparent;font-size:22px;cursor:pointer;border-radius:10px}
+.coach{display:flex;gap:12px;align-items:flex-start;margin:16px 0 0;background:none;border:0;padding:0;text-align:left;cursor:pointer;width:100%}
+.coach .av{flex:none;width:52px;height:52px;border-radius:50%;background:var(--surface);border:1.5px solid var(--line);display:grid;place-items:center;font-size:28px}
+.coach .bub{background:var(--surface);border:1.5px solid var(--line);border-radius:4px 14px 14px 14px;padding:10px 12px;font-size:16px;flex:1}
+.coach .who{display:block;font-weight:600;font-size:14px;color:var(--muted)}
+.sprint{background:var(--d2);color:#fff;border-radius:18px;padding:18px 16px;margin-top:18px}
+.sprint h2{margin:0 0 6px;color:#fff}.sprint p{color:#DCE7F7}
+.sprint .btn{background:#fff;color:var(--d2);border-color:#fff;margin-top:4px}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+.bd{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center;font-size:14px;line-height:1.25;font-weight:600}
+.bd .ic{font-size:30px;display:block;margin-bottom:4px}
+.bd small{display:block;color:var(--muted);margin-top:3px;font-weight:400}
+.bd.locked{opacity:.5}.bd.locked .ic{filter:grayscale(1)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;z-index:60;box-shadow:0 6px 24px rgba(0,0,0,.25);max-width:90vw;text-align:center}
+.cf{position:fixed;top:-24px;width:12px;height:22px;border-radius:3px;z-index:50;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(112vh) rotate(720deg)}}
+.lvl{position:fixed;inset:0;background:rgba(10,12,16,.6);display:grid;place-items:center;z-index:55;padding:20px;cursor:pointer}
+.lvl .box{background:var(--surface);color:var(--ink);border-radius:20px;padding:26px 22px;text-align:center;max-width:340px;animation:pop .5s ease-out}
+.lvl .big{color:var(--ex);font-size:56px}
+.sp-time{font:800 56px/1 "Barlow Condensed",sans-serif;text-align:center;color:var(--d2);font-variant-numeric:tabular-nums;margin:0 0 4px}
+.sp-time.hot{color:var(--ex)}
+.sp-score{text-align:center;color:var(--muted);font-weight:600;margin-bottom:10px}
+.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.vxhead{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--ink);color:var(--bg);padding:10px 12px;border-radius:12px;font-weight:600;font-size:15px;margin-bottom:12px}
+.vx{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.rq{font:600 20px/1.35 Barlow,system-ui,sans-serif;margin:0 0 14px}
+.ropt{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer;font-size:17px}
+.ropt input,.ync input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--d2)}
+.warn{background:var(--badbg);border-radius:8px;padding:8px 10px;font-size:15px}
+.yn{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ynh,.ynr{display:grid;grid-template-columns:1fr 50px 50px;align-items:center;gap:4px}
+.ynh{background:var(--tipbg);font-weight:600;font-size:14px;padding:8px 10px}
+.ynh span:not(:first-child){text-align:center}
+.ynr{padding:8px 10px;border-top:1px solid var(--line);font-size:16px}
+.ync{display:flex;justify-content:center;align-items:center;min-height:44px;cursor:pointer}
+.mt{display:grid;gap:14px}.mtr{display:grid;gap:6px;font-size:16px}
+select{font:500 16px Barlow,system-ui,sans-serif;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);min-height:44px;max-width:100%}
+.ddp{font-size:18px;line-height:2.1;margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:8px}
+.rv-b{min-height:44px;border-radius:10px;border:1.5px dashed var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:600;font-size:15px}
+.rv-b.done{border-style:solid;border-color:var(--ok)}.rv-b.mk{background:var(--tipbg)}
+.exam .btn.alt{background:transparent;color:#fff;border-color:rgba(255,255,255,.75)}
+.exam .acts{margin-top:6px}
+.term{font:inherit;font-weight:700;background:none;border:0;padding:0;color:inherit;border-bottom:2.5px dotted var(--c);cursor:pointer;line-height:inherit}
+.hint2{color:var(--muted);font-size:14px;margin:12px 0 0}
+.fsz{float:right;display:flex;gap:6px;margin:-4px -4px 6px 10px}
+.fsz button{min-width:44px;min-height:40px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:700 16px Barlow,system-ui,sans-serif;cursor:pointer}
+.qc{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:14px;padding:14px 14px 16px;margin-top:16px}
+.qc h3{margin:0 0 6px}.qcq{font-weight:600;font-size:18px;line-height:1.35}
+.sheet{position:fixed;inset:0;z-index:58;display:flex;align-items:flex-end;justify-content:center;background:rgba(10,12,16,.35);padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));cursor:pointer}
+.sbox{background:var(--surface);color:var(--ink);border-radius:18px;padding:16px 18px;max-width:520px;width:100%;animation:pop .3s ease-out;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.sbox b{font-size:26px;display:block;margin-bottom:4px}.sbox small{color:var(--muted)}
+.lmap{list-style:none;padding:0;margin:18px 0 0;position:relative}
+.lmap::before{content:"";position:absolute;left:25px;top:24px;bottom:24px;width:4px;background:var(--line);border-radius:2px}
+.lm{display:flex;gap:14px;align-items:center;width:100%;background:none;border:0;padding:8px 0;text-align:left;cursor:pointer;color:var(--ink);font:inherit}
+.lmn{position:relative;z-index:1;flex:none;width:54px;height:54px;border-radius:50%;background:var(--surface);border:3px solid var(--line);display:grid;place-items:center;font:800 20px/1 "Barlow Condensed",sans-serif}
+.lm.done .lmn{background:var(--c);border-color:var(--c);color:var(--pc)}
+.lm.nx .lmn{border-color:var(--c);animation:ring 1.6s ease-out infinite}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(30,90,168,.45)}100%{box-shadow:0 0 0 12px rgba(30,90,168,0)}}
+.lmt{font-weight:600;font-size:17px;line-height:1.25}.lmt small{display:block;color:var(--muted);font-weight:400;font-size:14px;margin-top:2px}
+.syl{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;cursor:pointer;font-size:16px}
+.syl+.syl{border-top:1px solid var(--line)}
+.syl input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--d1)}
+.ready{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px 6px;margin-top:16px}
+.ready h2{margin:0;font-size:24px}
+.rtop{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.rpct{font-size:44px}
+.rrow{display:flex;justify-content:space-between;font-size:15px;font-weight:600;margin-bottom:4px}
+.ready .prog{margin-bottom:10px}
+.boss{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:14px}
+.bname{display:flex;gap:10px;align-items:center;flex:1}
+.drag{font-size:40px;display:inline-block}
+.drag.hit{animation:shake .35s}
+.hp{height:10px;background:var(--line);border-radius:5px;overflow:hidden;margin:4px 0 2px;min-width:110px}
+.hp div{height:100%;background:var(--ex);transition:width .4s}
+.boss small{color:var(--muted)}
+.hearts{font-size:20px;white-space:nowrap}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<script>
+const D={
+d1:{name:"Cloud-koncepter",pct:"25–30%",color:"var(--d1)",pc:"#fff",
+lessons:[
+["Hvad er cloud?","<p><b>Cloud computing</b> betyder, at du får IT-tjenester som servere, lagring, databaser, netværk og software leveret over internettet.</p><p>Du lejer i stedet for at eje. Microsoft bygger og driver datacentrene, og du bruger det, du har brug for.</p>","Hjemmegym eller fitnessmedlemskab? Hjemmegymmet er dyrt fra start, og du reparerer selv maskinerne. Medlemskabet betaler du løbende for – det er cloud."],
+["Shared responsibility","<p>Ansvaret deles mellem Microsoft og dig. Hvor stor en del hver har, afhænger af servicetypen.</p><ul><li><b>Altid Microsofts:</b> det fysiske datacenter, det fysiske netværk og de fysiske servere.</li><li><b>Altid dit:</b> dine data, dine enheder, dine konti og identiteter.</li><li>Jo mere du går fra IaaS mod SaaS, jo mere overtager Microsoft.</li></ul>","Fitnesscentret sørger for bygningen og maskinerne. Men om du låser dit skab – det er dit eget ansvar. Det samme gælder dine data."],
+["Public, private og hybrid","<ul><li><b>Public cloud:</b> ejet af udbyderen og delt med mange kunder. Ingen store investeringer på forhånd.</li><li><b>Private cloud:</b> bruges af én organisation. Fuld kontrol, men du betaler for hardwaren.</li><li><b>Hybrid cloud:</b> en kombination af public og private.</li><li><b>Multi-cloud:</b> flere cloud-udbydere på én gang.</li></ul><p><b>Azure Arc</b> lader dig styre servere uden for Azure (on-prem og andre clouds) fra Azure. <b>Azure VMware Solution</b> kører dine VMware-maskiner i Azure.</p>","Public = offentligt fitnesscenter. Private = dit eget privatgym. Hybrid = du træner hjemme om morgenen og i centret om aftenen."],
+["CapEx vs. OpEx","<p><b>CapEx</b> (capital expenditure) er en stor engangsinvestering i fysisk udstyr, fx servere og datacentre.</p><p><b>OpEx</b> (operational expenditure) er løbende betaling for services. Cloud er OpEx.</p><p>Azure bruger en <b>consumption-based model</b>: du betaler kun for det, du bruger, og der er ingen udgifter på forhånd (pay-as-you-go).</p>","CapEx = du køber hele hjemmegymmet. OpEx = du betaler et månedligt medlemskab og kan opsige det når som helst."],
+["Tilgængelighed og skalering","<ul><li><b>High availability:</b> tjenesten er tilgængelig, selv når noget går galt. En <b>SLA</b> (service-level agreement) angiver den garanterede oppetid, fx 99,9 %.</li><li><b>Scalability:</b> du kan justere kapaciteten efter behov.</li><li><b>Vertical scaling (scale up):</b> mere CPU eller RAM til den samme maskine.</li><li><b>Horizontal scaling (scale out):</b> flere maskiner.</li><li><b>Elasticity:</b> skalering sker automatisk efter belastningen.</li></ul>","Scale up = tungere vægte på den samme stang. Scale out = flere stænger. Elasticity = centret åbner automatisk ekstra hold i januar."],
+["Pålidelighed og forudsigelighed","<p><b>Reliability:</b> systemet kan komme sig efter fejl og fortsætte med at fungere. Azure hjælper med et decentralt design på tværs af regioner.</p><p><b>Predictability:</b> du kan forudsige både <b>performance</b> (fx med autoscaling og load balancing) og <b>omkostninger</b> (du kan spore og forudsige forbruget).</p>","Et godt træningsprogram er forudsigeligt: du ved, hvad det koster af tid, og hvad du får ud af det."],
+["Sikkerhed, governance og administration","<ul><li><b>Governance:</b> skabeloner og politikker sikrer, at du overholder regler og standarder.</li><li><b>Security:</b> du vælger selv kontrolniveauet. Med IaaS styrer du mere selv, og med PaaS og SaaS patcher Microsoft for dig. Azure har også DDoS-beskyttelse.</li><li><b>Management of the cloud:</b> autoscaling, skabeloner, overvågning og alarmer.</li><li><b>Management in the cloud:</b> du styrer det hele via portal, CLI, API'er eller PowerShell.</li></ul>","Governance er fitnesscentrets husregler. Alle skal overholde dem, uanset hvem der træner."],
+["IaaS, PaaS og SaaS","<ul><li><b>IaaS:</b> mest kontrol. Du lejer infrastruktur som virtuelle maskiner. Godt til <i>lift-and-shift</i>-migrering samt test og udvikling.</li><li><b>PaaS:</b> platformen er klar, og du bygger bare din app. Eksempler er App Service og Azure SQL Database.</li><li><b>SaaS:</b> færdig software, du bare bruger. Eksempler er Microsoft 365 og Outlook.</li></ul>","IaaS = du lejer en tom hal og bringer selv udstyret. PaaS = maskinerne står klar, og du træner. SaaS = holdtræning: du møder bare op."],
+["Serverless","<p>Med <b>serverless</b> tænker du slet ikke på servere. Koden kører, når en hændelse sker, og du betaler kun for den tid, den kører.</p><p>Eksempler er <b>Azure Functions</b> og <b>Logic Apps</b>. Serverless regnes typisk som en form for PaaS.</p>","Serverless er som et klippekort: du betaler kun, når du rent faktisk træner."]
+],
+quiz:[
+["En virksomhed vil undgå store investeringer i hardware på forhånd. Hvilken udgiftstype giver cloud?",["CapEx","OpEx","Afskrivning","Fast årlig licens"],1,"Cloud er OpEx: du betaler løbende for det, du bruger, i stedet for en stor investering på forhånd."],
+["Hvem er ALTID ansvarlig for data og brugerkonti, uanset servicetype?",["Microsoft","Kunden","Begge ligeligt","Det afhænger af regionen"],1,"I shared responsibility-modellen er data, enheder, konti og identiteter altid kundens ansvar."],
+["Hvilken servicetype giver dig mest kontrol over operativsystemet?",["IaaS","PaaS","SaaS","Serverless"],0,"Med IaaS styrer du selv OS og alt ovenover. Microsoft står for den fysiske hardware."],
+["Microsoft 365 er et eksempel på:",["IaaS","PaaS","SaaS","Private cloud"],2,"Microsoft 365 er færdig software, du bare bruger. Det er SaaS."],
+["En webshop tilføjer automatisk servere på Black Friday og fjerner dem igen bagefter. Hvad kaldes det?",["Elasticity","Reliability","Governance","Predictability"],0,"Elasticity betyder, at ressourcerne automatisk skalerer op og ned efter belastningen."],
+["At give en eksisterende VM mere CPU og RAM kaldes:",["Horizontal scaling","Vertical scaling","Load balancing","Geo-redundans"],1,"Vertical scaling (scale up) gør den samme maskine stærkere. Horizontal scaling tilføjer flere maskiner."],
+["Hvad beskriver en SLA?",["Hvad du betaler om måneden","Den garanterede oppetid og performance","Hvilket OS du skal bruge","Firmaets sikkerhedsregler"],1,"En SLA er Microsofts aftale om garanteret oppetid, fx 99,9 %."],
+["Hvilken model kombinerer on-premises og public cloud?",["Private cloud","Public cloud","Hybrid cloud","SaaS"],2,"Hybrid cloud kombinerer din egen infrastruktur med public cloud."],
+["Hvilken service lader dig styre servere i andre clouds og on-prem direkte fra Azure?",["Azure Arc","Azure Monitor","Azure DNS","Azure Advisor"],0,"Azure Arc udvider Azure-styring til ressourcer uden for Azure."],
+["Hvem patcher operativsystemet i PaaS?",["Kunden","Microsoft","En tredjepart","Ingen"],1,"I PaaS styrer Microsoft operativsystemet, så du kan fokusere på din app."],
+["Hvad er consumption-based model?",["Et fast årligt beløb","Du betaler kun for det, du bruger","Du køber hardwaren selv","Alt er gratis"],1,"Du betaler kun for det faktiske forbrug, uden udgifter på forhånd."],
+["Hvilken fordel handler om at kunne forudsige omkostninger og performance?",["Predictability","Elasticity","Manageability","Security"],0,"Predictability dækker både performance og omkostninger."],
+["Et system, der automatisk kommer sig efter fejl, er et udtryk for:",["Reliability","Governance","Scalability","Manageability"],0,"Reliability er evnen til at komme sig efter fejl og fortsætte med at fungere."],
+["Azure Functions er et eksempel på:",["Serverless","IaaS","SaaS","Private cloud"],0,"Azure Functions er serverless: koden kører på hændelser, og du betaler per kørsel."],
+["Hvilken del er ALTID Microsofts ansvar?",["Brugerkonti","Det fysiske datacenter","Dine data","Adgangskoder"],1,"Det fysiske datacenter, netværk og de fysiske servere er altid Microsofts ansvar."]
+],
+cards:[
+["CapEx","En stor engangsinvestering i fysisk infrastruktur, fx servere."],
+["OpEx","Løbende betaling for services. Cloud er OpEx."],
+["Consumption-based model","Du betaler kun for det, du bruger, uden udgifter på forhånd."],
+["IaaS","Du lejer infrastruktur (fx VM'er). Mest kontrol, mest ansvar."],
+["PaaS","Platformen er klar, og du bygger din app. Microsoft styrer OS."],
+["SaaS","Færdig software, du bare bruger, fx Microsoft 365."],
+["Shared responsibility","Ansvaret deles. Data, konti og enheder er altid kundens."],
+["Hybrid cloud","En kombination af on-premises/private og public cloud."],
+["Scalability","At justere kapaciteten – vertikalt (større) eller horisontalt (flere)."],
+["Elasticity","Automatisk skalering op og ned efter behov."],
+["High availability","Tjenesten er tilgængelig, selv når noget går galt."],
+["SLA","Service-level agreement: den garanterede oppetid, fx 99,9 %."],
+["Serverless","Kode kører på hændelser. Du betaler per kørsel og tænker ikke på servere."],
+["Azure Arc","Styr servere, Kubernetes og databaser uden for Azure fra Azure."]
+]},
+d2:{name:"Arkitektur og services",pct:"35–40%",color:"var(--d2)",pc:"#fff",
+lessons:[
+["Hierarkiet i Azure","<p>Fra størst til mindst:</p><ul><li><b>Management groups:</b> samler subscriptions, så du kan styre politikker og adgang på tværs.</li><li><b>Subscriptions:</b> en grænse for fakturering og adgang. Brug fx én til udvikling og én til produktion.</li><li><b>Resource groups:</b> logiske containere til ressourcer. En ressource kan kun ligge i én gruppe, og grupper kan ikke ligge i hinanden.</li><li><b>Resources:</b> VM'er, databaser, storage osv.</li></ul><p>Sletter du en resource group, slettes alt i den!</p>","Tænk på en fitnesskæde: kæden (management group), det enkelte center (subscription), rummene (resource groups) og maskinerne (resources)."],
+["Regioner","<p>En <b>region</b> er et geografisk område med ét eller flere datacentre, forbundet med et netværk med lav forsinkelse.</p><p><b>Region pairs:</b> de fleste regioner er parret med en anden region i samme geografi. Opdateringer rulles ud til én ad gangen, og ved et stort nedbrud prioriteres gendannelse af én region i hvert par.</p><p><b>Sovereign regions</b> er isolerede udgaver af Azure, fx Azure Government (USA) og Azure i Kina, som drives af 21Vianet.</p>","Vælg en region tæt på dine brugere – ligesom du vælger det fitnesscenter, der ligger tættest på dig."],
+["Availability zones","<p><b>Availability zones</b> er fysisk adskilte datacentre inden for én region. Hver zone har egen strøm, køling og netværk.</p><p>Regioner, der understøtter zoner, har <b>mindst tre</b>. Hvis én zone går ned, kører de andre videre.</p><ul><li><b>Zonal services:</b> du placerer ressourcen i en bestemt zone (fx en VM).</li><li><b>Zone-redundant services:</b> Azure kopierer automatisk på tværs af zoner.</li></ul>","Tre omklædningsrum med hver deres bruser. Går vandet i det ene, kan du stadig komme i bad."],
+["Compute: virtuelle maskiner","<ul><li><b>Virtual machines (VM):</b> IaaS med fuld kontrol over OS.</li><li><b>VM Scale Sets:</b> mange ens VM'er med automatisk skalering og load balancing.</li><li><b>Availability sets:</b> spreder VM'er over <b>fault domains</b> (forskellig strøm og netværk) og <b>update domains</b> (opdateres ikke samtidig).</li><li><b>Azure Virtual Desktop:</b> Windows-skrivebord og apps fra skyen.</li></ul>","Fault domains: stil ikke alle løbebånd på samme stikkontakt. Update domains: service én maskine ad gangen, så resten kan bruges."],
+["Containers, Functions og App Service","<ul><li><b>Containers</b> er letvægtsmiljøer, der deler værtens OS og starter hurtigt.</li><li><b>Azure Container Instances (ACI):</b> den nemmeste måde at køre en container på, uden at styre servere.</li><li><b>Azure Container Apps:</b> containere med ekstra funktioner som autoskalering og load balancing.</li><li><b>Azure Kubernetes Service (AKS):</b> orkestrering af mange containere.</li><li><b>Azure Functions:</b> serverless kode, der kører på hændelser.</li><li><b>App Service:</b> PaaS-hosting af webapps, API'er og mobil-backends.</li></ul>","En VM er en hel lejlighed. En container er et værelse i et bofællesskab: hurtigere at flytte ind i, men I deler køkkenet (OS'et)."],
+["Netværk","<ul><li><b>Virtual Network (VNet):</b> dit private netværk i Azure, delt op i subnets.</li><li><b>VNet peering:</b> forbinder to VNets, også på tværs af regioner.</li><li><b>VPN Gateway:</b> krypteret forbindelse til on-prem over internettet.</li><li><b>ExpressRoute:</b> privat forbindelse, der <b>ikke</b> går over det offentlige internet.</li><li><b>Azure DNS:</b> host dine DNS-domæner i Azure.</li><li><b>Public endpoint</b> har en offentlig IP. <b>Private endpoint</b> giver en privat IP i dit VNet.</li></ul>","VPN er en tunnel under en offentlig vej. ExpressRoute er din helt egen privatvej."],
+["Storage-typer","<p>En <b>storage account</b> har et navn, der skal være unikt i hele verden, og samler dine data services:</p><ul><li><b>Blob:</b> ustruktureret data som billeder, video og backup.</li><li><b>Azure Files:</b> fildelinger via SMB eller NFS.</li><li><b>Queue:</b> beskeder mellem app-komponenter.</li><li><b>Table:</b> NoSQL-data med nøgle og værdi.</li><li><b>Disk storage:</b> diske til VM'er.</li></ul>","Blob er dit store sportstaskerum: alt kan ligge der, uanset form."],
+["Redundans","<ul><li><b>LRS:</b> tre kopier i ét datacenter.</li><li><b>ZRS:</b> tre kopier fordelt på tre availability zones.</li><li><b>GRS:</b> LRS i din region + en kopi i en sekundær region.</li><li><b>GZRS:</b> ZRS i din region + en kopi i en sekundær region.</li><li><b>RA-GRS / RA-GZRS:</b> som ovenfor, men du kan også <b>læse</b> fra den sekundære region.</li></ul>","L = lokal, Z = zoner, G = geografisk. Jo flere bogstaver, jo mere sikker – og dyrere."],
+["Access tiers","<ul><li><b>Hot:</b> data, du bruger ofte.</li><li><b>Cool:</b> sjældent brugt, gemmes mindst 30 dage.</li><li><b>Cold:</b> meget sjældent brugt, mindst 90 dage.</li><li><b>Archive:</b> næsten aldrig brugt, mindst 180 dage. Data er offline og skal <b>rehydreres</b> (kan tage timer) før brug.</li></ul><p>Jo koldere, jo billigere at gemme – men dyrere at hente.</p>","Hot = drikkedunken i hånden. Archive = vinterjakken på loftet."],
+["Flyt og migrér data","<ul><li><b>AzCopy:</b> kommandolinjeværktøj til at kopiere data.</li><li><b>Azure Storage Explorer:</b> app med grafisk brugerflade til dine storage-data.</li><li><b>Azure File Sync:</b> synkroniserer en Windows-filserver med Azure Files.</li><li><b>Azure Migrate:</b> samlet hub til at flytte servere, databaser og webapps til Azure.</li><li><b>Azure Data Box:</b> en fysisk boks, der sendes med post, når der er for meget data til nettet.</li></ul>","Data Box er flyttebilen. Når der er for meget til at bære, kører man det hele på én gang."],
+["Identitet: Microsoft Entra ID","<p><b>Microsoft Entra ID</b> (tidligere Azure AD) er Azures cloud-baserede identitets- og adgangsstyring.</p><ul><li><b>Authentication:</b> hvem er du? <b>Authorization:</b> hvad må du?</li><li><b>SSO:</b> ét login til mange apps.</li><li><b>MFA:</b> to eller flere beviser – noget du ved, har eller er.</li><li><b>Passwordless:</b> Windows Hello, Authenticator-app eller FIDO2-nøgle.</li><li><b>Microsoft Entra Connect:</b> synkroniserer on-prem Active Directory med Entra ID.</li><li><b>Microsoft Entra Domain Services:</b> administrerede domænetjenester (domain join, group policy, LDAP, Kerberos) uden at du selv skal køre domain controllers.</li><li><b>External identities:</b> B2B til partnere og B2C til kunder.</li></ul>","Authentication er dit medlemskort i døren. Authorization er, om kortet giver adgang til spaen."],
+["Adgang og sikkerhed","<ul><li><b>Conditional Access:</b> hvis-så-regler baseret på bruger, lokation og enhed. Fx: login fra udlandet → kræv MFA.</li><li><b>Azure RBAC:</b> roller tildeles på et scope og <b>nedarves</b> nedad. Giv kun den adgang, der er brug for (least privilege).</li><li><b>Zero Trust:</b> verificér altid, giv mindst mulig adgang, og antag, at du allerede er kompromitteret.</li><li><b>Defense in depth:</b> sikkerhed i lag – fysisk, identitet, perimeter, netværk, compute, applikation og data.</li><li><b>Microsoft Defender for Cloud:</b> overvåger sikkerheden og giver anbefalinger, også for hybrid og multi-cloud.</li></ul>","Defense in depth er som et fitnesscenter med dørkort, reception, låste skabe og kamera. Kommer en forbi ét lag, er der stadig flere."]
+],
+quiz:[
+["Hvad er den rigtige rækkefølge fra størst til mindst?",["Management group → Subscription → Resource group → Resource","Subscription → Management group → Resource group → Resource","Resource group → Subscription → Management group → Resource","Resource → Resource group → Subscription → Management group"],0,"Management groups samler subscriptions, som indeholder resource groups, som indeholder resources."],
+["Hvad sker der, når du sletter en resource group?",["Kun gruppen slettes","Alle ressourcer i den slettes også","Ressourcerne flyttes til en anden gruppe","Intet, den skal tømmes først"],1,"Sletter du en resource group, slettes alle ressourcer i den."],
+["Hvor mange availability zones har en region, der understøtter zoner, mindst?",["1","2","3","5"],2,"Regioner med availability zones har mindst tre fysisk adskilte zoner."],
+["Hvilken service giver en privat forbindelse til Azure, der ikke går over internettet?",["VPN Gateway","ExpressRoute","VNet peering","Azure DNS"],1,"ExpressRoute er en privat forbindelse. VPN Gateway krypterer trafikken, men går over internettet."],
+["Du vil forbinde to virtuelle netværk i Azure. Hvad bruger du?",["VNet peering","ExpressRoute","Azure Data Box","Azure DNS"],0,"VNet peering forbinder VNets, også på tværs af regioner."],
+["Hvilken storage-type passer bedst til billeder og video?",["Blob storage","Queue storage","Table storage","Disk storage"],0,"Blob storage er lavet til store mængder ustruktureret data."],
+["Hvilken redundans gemmer tre kopier fordelt på availability zones i én region?",["LRS","ZRS","GRS","RA-GRS"],1,"ZRS = zone-redundant storage. LRS gemmer alle tre kopier i ét datacenter."],
+["Hvilken access tier er billigst at gemme i, men kræver rehydrering før brug?",["Hot","Cool","Cold","Archive"],3,"Archive er offline og skal rehydreres, hvilket kan tage timer."],
+["Du skal flytte 60 TB, men internetforbindelsen er langsom. Hvad bruger du?",["AzCopy","Azure Data Box","Azure Storage Explorer","Azure File Sync"],1,"Azure Data Box er en fysisk enhed, der sendes med post til Microsoft."],
+["Hvilken service kører en enkelt container hurtigst uden at styre servere?",["AKS","Azure Container Instances","VM Scale Sets","Azure Virtual Desktop"],1,"ACI er den nemmeste måde at køre en container på. AKS er til orkestrering af mange."],
+["Hvad er Microsoft Entra ID?",["En database","Cloud-baseret identitets- og adgangsstyring","En firewall","En backup-tjeneste"],1,"Entra ID (tidligere Azure AD) styrer logins og adgang."],
+["Hvad kræver MFA?",["To eller flere former for verifikation","Et meget langt password","En VPN-forbindelse","Godkendelse fra en admin"],0,"MFA kombinerer fx noget du ved (password) med noget du har (telefon)."],
+["Hvilket sikkerhedsprincip siger 'antag, at du allerede er kompromitteret'?",["Defense in depth","Zero Trust","Least privilege","Shared responsibility"],1,"Zero Trust: verificér altid, giv mindst mulig adgang, og antag brud."],
+["Hvad styrer Azure RBAC?",["Hvem der må gøre hvad på hvilke ressourcer","Hvilke regioner ressourcer må ligge i","Hvad ressourcerne koster","Hvor ofte der tages backup"],0,"RBAC styrer adgang via roller på et scope. Regler for selve ressourcerne er Azure Policy."],
+["Hvilken service overvåger din sikkerhedstilstand og giver sikkerhedsanbefalinger på tværs af hybrid og multi-cloud?",["Azure DNS","Microsoft Defender for Cloud","Azure Migrate","Azure Data Box"],1,"Defender for Cloud overvåger og beskytter dine workloads."],
+["Hvad beskytter fault domains i et availability set imod?",["Hardwarefejl som strøm eller netværk i et rack","Høje priser","Forkerte adgangsrettigheder","Phishing"],0,"Fault domains spreder VM'er over forskellig strøm og netværk. Update domains håndterer planlagt vedligehold."],
+["Hvilken service synkroniserer on-prem Active Directory med Entra ID?",["Microsoft Entra Connect","Azure File Sync","Azure Arc","AzCopy"],0,"Entra Connect synkroniserer brugere mellem on-prem AD og Entra ID."],
+["Hvad er en sovereign region?",["En isoleret udgave af Azure, fx Azure Government","En region uden datacentre","En gratis prøveregion","En region kun til backup"],0,"Sovereign regions er isolerede af hensyn til lovgivning, fx Azure Government og Azure i Kina."]
+],
+cards:[
+["Management group","Samler subscriptions, så politikker og adgang kan styres på tværs."],
+["Subscription","Grænse for fakturering og adgang."],
+["Resource group","Logisk container til ressourcer. Slettes den, slettes alt i den."],
+["Region pair","To regioner i samme geografi. Opdateres én ad gangen."],
+["Availability zone","Fysisk adskilt datacenter i en region. Mindst tre per understøttet region."],
+["Sovereign region","Isoleret Azure, fx Azure Government eller Azure i Kina (21Vianet)."],
+["VM Scale Sets","Mange ens VM'er med autoskalering og load balancing."],
+["Availability set","Spreder VM'er over fault domains og update domains."],
+["Azure Container Instances","Den nemmeste måde at køre en container på."],
+["AKS","Azure Kubernetes Service: orkestrering af mange containere."],
+["App Service","PaaS-hosting af webapps, API'er og mobil-backends."],
+["VPN Gateway","Krypteret forbindelse til on-prem over internettet."],
+["ExpressRoute","Privat forbindelse, der ikke går over det offentlige internet."],
+["LRS / ZRS","Tre kopier i ét datacenter / tre kopier på tværs af zoner."],
+["GRS / GZRS","Som LRS/ZRS, plus en kopi i en sekundær region."],
+["Archive tier","Billigst at gemme, offline, skal rehydreres. Mindst 180 dage."],
+["Azure Data Box","Fysisk boks til at flytte store datamængder."],
+["Microsoft Entra ID","Cloud-baseret identitets- og adgangsstyring."],
+["Conditional Access","Hvis-så-regler for login baseret på bruger, lokation og enhed."],
+["Zero Trust","Verificér altid, mindst mulig adgang, antag brud."],
+["Defense in depth","Sikkerhed i flere lag, fra fysisk til data."]
+]},
+d3:{name:"Styring og governance",pct:"30–35%",color:"var(--d3)",pc:"#16191D",
+lessons:[
+["Hvad påvirker prisen?","<ul><li><b>Ressourcetype og forbrug:</b> større og flere ressourcer koster mere.</li><li><b>Region:</b> samme service kan koste forskelligt i forskellige regioner.</li><li><b>Netværkstrafik:</b> data <b>ind</b> i Azure (ingress) er typisk gratis. Data <b>ud</b> (egress) koster.</li><li><b>Subscription-type</b> og køb via <b>Azure Marketplace</b>.</li></ul><p>Spar penge med <b>Reserved Instances</b> (bind dig i 1 eller 3 år) og <b>Azure Hybrid Benefit</b> (genbrug eksisterende Windows Server- og SQL-licenser).</p>","Reserved Instances er årskortet: billigere per gang, fordi du binder dig."],
+["Værktøjer til omkostninger","<ul><li><b>Pricing calculator:</b> estimér prisen på de services, du planlægger at bruge.</li><li><b>Microsoft Cost Management:</b> se dit faktiske forbrug, sæt budgetter og få alarmer.</li><li><b>Tags:</b> navn/værdi-par (fx Afdeling=Salg), der organiserer ressourcer og gør omkostninger nemme at fordele. Tags nedarves ikke automatisk.</li></ul>","Pricing calculator = du regner på, hvad et nyt træningsprogram koster. Cost Management = du tjekker kontoudtoget bagefter."],
+["Azure Policy","<p><b>Azure Policy</b> laver regler for, hvordan dine ressourcer må se ud. Fx: ressourcer må kun oprettes i EU-regioner, eller alle ressourcer skal have et tag.</p><p>Policy kan tjekke, om eksisterende ressourcer overholder reglerne, og i nogle tilfælde rette dem automatisk. Flere policies samlet kaldes et <b>initiative</b>.</p><p><b>Husk forskellen:</b> RBAC styrer <i>hvem</i> der må gøre hvad. Policy styrer <i>hvordan</i> ressourcerne må være.</p>","RBAC er dørkortet (hvem må komme ind). Policy er husreglerne (fx indendørssko påkrævet)."],
+["Resource locks og Purview","<p><b>Resource locks</b> forhindrer uheld:</p><ul><li><b>Delete (CanNotDelete):</b> du kan læse og ændre, men ikke slette.</li><li><b>ReadOnly:</b> du kan kun læse.</li></ul><p>Låse gælder også for ejere – de skal fjerne låsen først.</p><p><b>Microsoft Purview</b> er til data governance, risiko og compliance. Den kortlægger og klassificerer data på tværs af on-prem, multi-cloud og SaaS.</p>","En lås på skabet: selv du må låse op, før du kan tømme det."],
+["Værktøjer til at styre Azure","<ul><li><b>Azure portal:</b> webbaseret brugerflade.</li><li><b>Azure Cloud Shell:</b> Bash eller PowerShell direkte i browseren.</li><li><b>Azure CLI</b> og <b>Azure PowerShell:</b> styr Azure via kommandoer.</li><li><b>Azure Arc:</b> styr ressourcer uden for Azure.</li><li><b>Azure Resource Manager (ARM):</b> laget, som alle forespørgsler til Azure går igennem.</li><li><b>ARM templates (JSON)</b> og <b>Bicep:</b> Infrastructure as Code. Du beskriver, hvad du vil have, og Azure bygger det.</li></ul>","Infrastructure as Code er dit træningsprogram på papir: det samme resultat hver gang, du følger det."],
+["Azure Advisor","<p><b>Azure Advisor</b> er en gratis tjeneste, der analyserer dine ressourcer og giver personlige anbefalinger i fem kategorier:</p><ul><li>Reliability</li><li>Security</li><li>Performance</li><li>Operational excellence</li><li>Cost</li></ul>","Advisor er din personlige træner, der siger: »Du kan spare penge her, og den øvelse laver du forkert.«"],
+["Azure Service Health","<p>Service Health har tre niveauer:</p><ul><li><b>Azure status:</b> det globale overblik over alle regioner.</li><li><b>Service Health:</b> de services og regioner, <i>du</i> bruger, inkl. planlagt vedligehold og hændelser.</li><li><b>Resource Health:</b> en <i>specifik</i> ressource, fx din VM.</li></ul>","Azure status = vejrudsigten for hele landet. Service Health = din by. Resource Health = dit eget vindue."],
+["Azure Monitor","<p><b>Azure Monitor</b> indsamler og analyserer metrics og logs fra Azure, on-prem og andre clouds.</p><ul><li><b>Log Analytics:</b> skriv forespørgsler i logdata (med sproget KQL).</li><li><b>Alerts:</b> send besked eller start en handling, når en grænse overskrides.</li><li><b>Application Insights:</b> overvåg performance, forespørgsler og fejl i dine webapps.</li></ul>","Azure Monitor er dit pulsur: det logger alt og bipper, når pulsen bliver for høj."]
+],
+quiz:[
+["Du vil estimere prisen på nye Azure-services, du planlægger. Hvilket værktøj bruger du?",["Pricing calculator","Azure Advisor","Service Health","Azure Policy"],0,"Pricing calculator estimerer omkostninger for planlagte services."],
+["Du vil sikre, at ressourcer kun oprettes i EU-regioner. Hvad bruger du?",["Azure Policy","Azure RBAC","Resource lock","Tags"],0,"Azure Policy håndhæver regler for, hvordan ressourcer må oprettes."],
+["Hvilken lås forhindrer sletning, men tillader ændringer?",["ReadOnly","Delete (CanNotDelete)","Archive","Reader-rollen"],1,"Delete-låsen tillader læsning og ændring, men ikke sletning."],
+["Hvad bruges tags primært til?",["Organisering og fordeling af omkostninger","Kryptering","Netværksforbindelser","Backup"],0,"Tags er navn/værdi-par, fx Afdeling=Salg, til organisering og omkostningsrapporter."],
+["Hvilken af disse faktorer påvirker prisen i Azure?",["Regionen","Din browser","Tidspunktet du logger ind","Dit brugernavn"],0,"Prisen på samme service kan variere mellem regioner."],
+["Hvilken service giver personlige anbefalinger om cost, security, reliability, performance og operational excellence?",["Azure Advisor","Azure Monitor","Service Health","Microsoft Purview"],0,"Azure Advisor giver anbefalinger i netop de fem kategorier."],
+["Du vil se, om DIN specifikke VM er ramt af et problem. Hvad tjekker du?",["Azure status","Resource Health","Pricing calculator","Azure Arc"],1,"Resource Health viser helbredet for en enkelt ressource."],
+["Hvilket værktøj giver Bash eller PowerShell direkte i browseren?",["Azure Cloud Shell","Azure Arc","Log Analytics","Azure Advisor"],0,"Cloud Shell kører i browseren, så du skal ikke installere noget."],
+["ARM templates og Bicep er eksempler på:",["Infrastructure as Code","SaaS","Monitorering","Identitetsstyring"],0,"De beskriver infrastrukturen som kode, så den kan bygges ens hver gang."],
+["Hvilken service indsamler metrics og logs og kan sende alarmer?",["Azure Monitor","Azure Advisor","Azure Policy","Entra ID"],0,"Azure Monitor samler data og kan udløse alerts."],
+["Hvilket værktøj overvåger performance og fejl i en webapp?",["Application Insights","Azure DNS","Azure Data Box","Resource locks"],0,"Application Insights er en del af Azure Monitor og er lavet til apps."],
+["Hvad bruges Microsoft Purview til?",["Data governance, risiko og compliance","Virtuelle maskiner","DNS","Container-orkestrering"],0,"Purview kortlægger og klassificerer data og hjælper med compliance."],
+["Hvordan sparer du penge på en VM, der skal køre konstant i 3 år?",["Reserved Instances","Archive tier","Flere tags","En resource lock"],0,"Med Reserved Instances binder du dig i 1 eller 3 år og får rabat."],
+["Hvilken netværkstrafik er typisk gratis i Azure?",["Data ind i Azure (ingress)","Data ud af Azure (egress)","Trafik mellem regioner","Al trafik"],0,"Ingress er typisk gratis. Egress koster."],
+["Hvad er forskellen på Azure Policy og RBAC?",["Policy styrer hvordan ressourcer må være, RBAC styrer hvem der må gøre hvad","De er det samme","Policy styrer priser, RBAC styrer netværk","RBAC er kun til storage"],0,"Policy = regler for ressourcerne. RBAC = adgang for brugerne."],
+["Hvad kan Azure Hybrid Benefit?",["Genbruge eksisterende Windows Server- og SQL-licenser i Azure","Give gratis storage","Forbinde to VNets","Overvåge apps"],0,"Hybrid Benefit lader dig bruge licenser, du allerede har, og spare penge."]
+],
+cards:[
+["Pricing calculator","Estimér prisen på services, du planlægger at bruge."],
+["Microsoft Cost Management","Se dit forbrug, sæt budgetter og få alarmer."],
+["Tags","Navn/værdi-par til organisering og omkostninger. Nedarves ikke automatisk."],
+["Azure Policy","Regler for hvordan ressourcer må være, fx tilladte regioner."],
+["Resource lock","Delete forhindrer sletning. ReadOnly tillader kun læsning."],
+["Microsoft Purview","Data governance, risiko og compliance på tværs af miljøer."],
+["Azure Cloud Shell","Bash eller PowerShell i browseren."],
+["Azure Resource Manager","Laget, som alle forespørgsler til Azure går igennem."],
+["Bicep / ARM templates","Infrastructure as Code: beskriv, hvad du vil have, og Azure bygger det."],
+["Azure Advisor","Gratis anbefalinger: cost, security, reliability, performance, operational excellence."],
+["Service Health","Status for de services og regioner, du bruger."],
+["Resource Health","Helbredet for én specifik ressource."],
+["Azure Monitor","Indsamler metrics og logs og sender alerts."],
+["Log Analytics","Forespørgsler i logdata med KQL."],
+["Application Insights","Overvåger performance og fejl i webapps."],
+["Reserved Instances","Bind dig i 1 eller 3 år og få rabat."],
+["Azure Hybrid Benefit","Genbrug eksisterende licenser i Azure."]
+]}
+};
+
+const EXTRA={
+d1:[
+["Du vil flytte eksisterende servere til skyen uden at ændre dem. Hvad passer bedst?",["IaaS","PaaS","SaaS","Serverless"],0,"Lift-and-shift til virtuelle maskiner er klassisk IaaS."],
+["En udvikler vil bare deploye sin webapp uden at tænke på OS eller patches. Hvad passer bedst?",["PaaS","IaaS","On-premises","Private cloud"],0,"Med PaaS står platformen klar, og Microsoft styrer OS og patches."],
+["Hvilken cloud-model kræver typisk, at du selv køber og vedligeholder hardwaren?",["Private cloud","Public cloud","SaaS","Serverless"],0,"En private cloud i dit eget datacenter kræver din egen hardware."],
+["Hvad betyder multi-cloud?",["Du bruger flere cloud-udbydere på én gang","Du bruger flere regioner i Azure","Du har flere subscriptions","Du har flere VM'er"],0,"Multi-cloud = flere udbydere, fx Azure og en anden cloud samtidig."],
+["Hvilken service lader dig køre dine VMware-workloads i Azure?",["Azure VMware Solution","Azure Arc","Azure Migrate","AKS"],0,"Azure VMware Solution kører VMware-miljøer direkte i Azure."],
+["Hvad betyder horizontal scaling?",["At tilføje flere instanser","At give én maskine mere CPU","At sænke prisen","At flytte til en anden region"],0,"Horizontal scaling (scale out) tilføjer flere maskiner eller instanser."],
+["Hvilken fordel handler om skabeloner og politikker, der sikrer, at du overholder regler?",["Governance","Elasticity","Reliability","Predictability"],0,"Governance sørger for, at alt følger virksomhedens regler og standarder."],
+["'Management in the cloud' betyder, at du kan styre Azure via:",["Portal, CLI, API'er og PowerShell","Kun et tastatur i datacentret","Kun e-mails til Microsoft","Kun en mobilapp"],0,"Du kan styre alt i Azure via portal, kommandolinje, API'er og PowerShell."],
+["Hvem er ansvarlig for det fysiske netværk i Azures datacentre?",["Microsoft","Kunden","Begge","Internetudbyderen"],0,"Fysisk datacenter, netværk og servere er altid Microsofts ansvar."],
+["Hvem patcher operativsystemet på en VM i IaaS?",["Kunden","Microsoft","Ingen","Det sker altid automatisk"],0,"I IaaS styrer du selv OS'et – også opdateringerne."],
+["Hvad er en fordel ved public cloud?",["Ingen store udgifter på forhånd","Fuld fysisk kontrol over hardwaren","Du ejer serverne","Kræver ingen internetforbindelse"],0,"Public cloud kræver ingen CapEx – du betaler for forbrug."],
+["Hvilken cloud-model lader dig beholde nogle systemer on-prem og flytte andre til public cloud?",["Hybrid cloud","Public cloud","Private cloud","SaaS"],0,"Hybrid cloud giver dig frihed til at vælge, hvor hver workload kører."],
+["Hvilken servicetype kræver mindst administration fra kunden?",["SaaS","PaaS","IaaS","On-premises"],0,"I SaaS står Microsoft for næsten alt. Du bruger bare softwaren."],
+["En SLA på 99,99 % betyder cirka:",["Maks. ca. 4 minutters nedetid om måneden","At tjenesten aldrig går ned","At den koster 99,99 kr.","At den er 99,99 % sikker mod hackere"],0,"0,01 % af en måned er omkring 4 minutter. Jo flere 9-taller, jo mindre nedetid."],
+["Hvad er et eksempel på CapEx?",["At købe servere til eget datacenter","Månedlig betaling for en VM","Betaling per kørsel af en Function","Et Microsoft 365-abonnement"],0,"Køb af fysisk udstyr er en investering på forhånd, altså CapEx."],
+["Ja eller nej: I cloud betaler du typisk for fysisk hardware på forhånd.",["Ja","Nej"],1,"Nej. Cloud er OpEx – du betaler løbende for forbrug."],
+["Ja eller nej: Elasticity betyder, at ressourcer automatisk kan skalere op og ned.",["Ja","Nej"],0,"Ja. Det automatiske er det, der adskiller elasticity fra scalability."],
+["Ja eller nej: I SaaS er kunden stadig ansvarlig for sine egne data.",["Ja","Nej"],0,"Ja. Data, konti og enheder er altid kundens ansvar."],
+["Ja eller nej: En private cloud kan kun ligge hos en cloud-udbyder.",["Ja","Nej"],1,"Nej. En private cloud kan ligge i dit eget datacenter eller hos en udbyder, men bruges kun af én organisation."],
+["Ja eller nej: Serverless betyder, at der slet ingen servere er.",["Ja","Nej"],1,"Nej. Serverne findes stadig – du skal bare ikke styre dem."]
+],
+d2:[
+["Hvilken service giver virtuelle Windows-skriveborde fra skyen?",["Azure Virtual Desktop","Azure Arc","App Service","Azure Files"],0,"Azure Virtual Desktop leverer Windows-skriveborde og apps fra skyen."],
+["Du vil hoste en webapp uden at styre servere. Hvad er oplagt?",["App Service","Azure Virtual Machines","ExpressRoute","Azure Data Box"],0,"App Service er PaaS-hosting af webapps og API'er."],
+["Hvilken service er lavet til at orkestrere mange containere?",["AKS","ACI","Azure Functions","Azure DNS"],0,"Azure Kubernetes Service styrer og skalerer mange containere."],
+["Hvilken storage-type bruges til fildelinger via SMB?",["Azure Files","Blob storage","Queue storage","Table storage"],0,"Azure Files giver fildelinger, du kan mappe som et netværksdrev."],
+["Hvilken storage-type bruges til at sende beskeder mellem app-komponenter?",["Queue storage","Table storage","Azure Files","Disk storage"],0,"Queue storage gemmer beskeder, som komponenterne henter én ad gangen."],
+["Hvilken redundans giver en kopi i en sekundær region OG læseadgang derfra?",["RA-GRS","LRS","ZRS","GRS"],0,"RA betyder read-access. Med almindelig GRS kan du kun bruge kopien efter en failover."],
+["Hvilken access tier passer til data, du bruger hver dag?",["Hot","Cool","Cold","Archive"],0,"Hot er dyrest at gemme i, men billigst at tilgå ofte."],
+["Hvilket kommandolinjeværktøj bruges til at kopiere filer til og fra storage?",["AzCopy","Azure Migrate","Azure Advisor","Entra Connect"],0,"AzCopy kopierer data via kommandolinjen."],
+["Hvilken service er en samlet hub til at vurdere og migrere servere til Azure?",["Azure Migrate","Azure Data Box","Azure Arc","Azure Monitor"],0,"Azure Migrate samler værktøjer til vurdering og migrering."],
+["Hvad er SSO?",["Ét login til mange apps","To-faktor-login","En firewall","En VPN"],0,"Single sign-on: log ind én gang, og få adgang til mange apps."],
+["Hvilken funktion kan kræve MFA, når en bruger logger ind fra et ukendt land?",["Conditional Access","Azure Policy","Resource lock","Azure DNS"],0,"Conditional Access bruger signaler som lokation til at beslutte, hvad der kræves."],
+["Du giver en bruger rollen Reader på en resource group. Hvor gælder den?",["For alle ressourcer i gruppen","Kun for selve gruppen","For hele subscriptionen","Kun i én dag"],0,"RBAC-roller nedarves nedad fra det scope, de tildeles på."],
+["Hvilket lag i defense in depth handler om at beskytte selve dataene, fx med kryptering?",["Data","Perimeter","Fysisk sikkerhed","Netværk"],0,"Data-laget er det inderste lag, som alle de andre beskytter."],
+["Hvad bruges Azure DNS til?",["At hoste dine domæner og navneopslag","At kopiere data","At styre adgang","At overvåge apps"],0,"Azure DNS oversætter domænenavne til IP-adresser for dine domæner."],
+["Hvad er et private endpoint?",["En privat IP i dit VNet til en Azure-service","En offentlig IP-adresse","En VPN-klient","En firewallregel"],0,"Med et private endpoint når du fx storage via en privat IP, uden om internettet."],
+["Hvad sikrer update domains i et availability set?",["At ikke alle VM'er genstartes samtidig ved vedligehold","At VM'erne ligger i forskellige regioner","At VM'erne er billigere","At data krypteres"],0,"Update domains opdateres én ad gangen, så resten kører videre."],
+["Hvilken type external identity giver partnere adgang som gæster?",["B2B","B2C","SSO","RBAC"],0,"B2B er til partnere og leverandører. B2C er til kunder."],
+["Hvad er et eksempel på passwordless-login?",["Windows Hello eller Authenticator-appen","Et password på 20 tegn","En VPN","En resource lock"],0,"Passwordless bruger fx biometri, en app eller en FIDO2-nøgle i stedet for et password."],
+["Ja eller nej: En resource group kan indeholde andre resource groups.",["Ja","Nej"],1,"Nej. Resource groups kan ikke ligge inde i hinanden."],
+["Ja eller nej: En ressource kan ligge i flere resource groups på én gang.",["Ja","Nej"],1,"Nej. En ressource hører til præcis én resource group, men kan flyttes."],
+["Ja eller nej: ExpressRoute-trafik går over det offentlige internet.",["Ja","Nej"],1,"Nej. ExpressRoute er en privat forbindelse via en connectivity provider."],
+["Ja eller nej: Navnet på en storage account skal være unikt i hele Azure.",["Ja","Nej"],0,"Ja. Navnet bliver en del af en offentlig URL og skal derfor være globalt unikt."],
+["Ja eller nej: Data i Archive tier kan læses med det samme.",["Ja","Nej"],1,"Nej. Archive-data skal først rehydreres, hvilket kan tage timer."],
+["Ja eller nej: Hver availability zone har egen strøm, køling og netværk.",["Ja","Nej"],0,"Ja. Derfor rammer et nedbrud i én zone ikke de andre."]
+],
+d3:[
+["Hvilket værktøj viser dit faktiske forbrug og lader dig sætte budgetter?",["Microsoft Cost Management","Pricing calculator","TCO calculator","Azure Arc"],0,"Cost Management viser, hvad du har brugt, og kan sende budgetalarmer."],
+["Hvilken lås lader brugere læse, men hverken ændre eller slette?",["ReadOnly","Delete (CanNotDelete)","Ingen lås","Owner-rollen"],0,"ReadOnly tillader kun læsning."],
+["Hvad kaldes en samling af flere Azure Policies?",["Et initiative","Et tag","En resource lock","En subscription"],0,"Et initiative samler relaterede policies, så de kan tildeles samlet."],
+["Hvilket sprog bruges til forespørgsler i Log Analytics?",["KQL","HTML","CSS","Bicep"],0,"KQL (Kusto Query Language) bruges til at søge i logdata."],
+["Hvilken del af Service Health viser status for ALLE Azure-regioner?",["Azure status","Resource Health","Service Health","Azure Advisor"],0,"Azure status er det globale overblik. Service Health er dine egne services."],
+["Du vil have besked, når CPU på en VM overstiger 90 %. Hvad sætter du op?",["En alert i Azure Monitor","En resource lock","Et tag","En Azure Policy"],0,"Alerts i Azure Monitor reagerer, når en grænse overskrides."],
+["Hvilket lag håndterer alle forespørgsler til Azure, uanset om de kommer fra portal, CLI eller API?",["Azure Resource Manager","Azure Arc","Azure DNS","Microsoft Entra ID"],0,"Alt går gennem ARM, så handlinger er ens uanset værktøj."],
+["Hvad betyder det, at ARM templates og Bicep er deklarative?",["Du beskriver slutresultatet, og Azure finder ud af hvordan","Du skriver hvert trin i rækkefølge","De kun virker i portalen","De er altid gratis"],0,"Deklarativt = du siger hvad, ikke hvordan."],
+["Du vil fordele omkostninger per afdeling. Hvad er det nemmeste?",["Tags","Resource locks","Availability zones","ExpressRoute"],0,"Med tags som Afdeling=Salg kan du filtrere omkostninger i Cost Management."],
+["Hvilken af disse påvirker typisk IKKE prisen?",["Navnet på din resource group","Regionen","Ressourcetypen","Udgående netværkstrafik"],0,"Navne er gratis. Region, type og egress påvirker prisen."],
+["Hvad gør Azure Policy med ressourcer, der ikke overholder en regel?",["Markerer dem som non-compliant og kan i nogle tilfælde rette dem","Sletter din subscription","Sender dig en ekstra regning","Ændrer din adgangskode"],0,"Policy evaluerer compliance og kan bruge remediation til at rette op."],
+["Hvilken Azure Advisor-kategori hjælper dig med at spare penge?",["Cost","Reliability","Performance","Security"],0,"Cost-anbefalinger peger fx på VM'er, der er for store eller står ubrugte."],
+["Hvad er en fordel ved Infrastructure as Code?",["Ens miljøer hver gang og færre manuelle fejl","Det er altid gratis","Det kræver ingen planlægning","Det erstatter backup"],0,"Kode kan genbruges, versionsstyres og giver samme resultat hver gang."],
+["Hvilket værktøj kan du bruge i en browser uden at installere noget?",["Azure portal og Cloud Shell","Kun Azure CLI installeret lokalt","Kun PowerShell installeret lokalt","AzCopy"],0,"Portalen og Cloud Shell kører begge direkte i browseren."],
+["Ja eller nej: En resource lock gælder også for brugere med Owner-rollen.",["Ja","Nej"],0,"Ja. Selv ejere skal fjerne låsen, før de kan slette eller ændre."],
+["Ja eller nej: Tags nedarves automatisk fra en resource group til dens ressourcer.",["Ja","Nej"],1,"Nej. Tags nedarves ikke automatisk – men Azure Policy kan sørge for det."],
+["Ja eller nej: Azure Advisor er gratis.",["Ja","Nej"],0,"Ja. Advisor koster ikke noget."],
+["Ja eller nej: Data, der sendes IND i Azure (ingress), koster typisk penge.",["Ja","Nej"],1,"Nej. Ingress er typisk gratis, mens egress koster."],
+["Ja eller nej: Resource Health viser status for én specifik ressource.",["Ja","Nej"],0,"Ja. Fx om netop din VM er ramt af et problem."],
+["Ja eller nej: Azure Arc kan kun styre ressourcer, der allerede ligger i Azure.",["Ja","Nej"],1,"Nej. Hele pointen med Arc er at styre ressourcer uden for Azure."]
+]};
+for(const k in EXTRA)D[k].quiz.push(...EXTRA[k]);
+const ADD={
+d1:{lessons:[
+["Prismodeller i cloud","<ul><li><b>Pay-as-you-go:</b> betal per time eller sekund, og stop når som helst. Godt, når forbruget er uforudsigeligt.</li><li><b>Reserved Instances:</b> bind dig til en bestemt ressource i 1 eller 3 år, og få stor rabat. Godt til stabile workloads, der kører hele tiden.</li><li><b>Savings plan for compute:</b> forpligt dig til et fast timeforbrug i 1 eller 3 år, men vælg frit mellem compute-services.</li><li><b>Spot VMs:</b> brug Azures ledige kapacitet med stor rabat. Men VM'en kan blive afbrudt, så det passer kun til opgaver, der kan tåle det, fx test og batchjob.</li></ul>","Pay-as-you-go = klippekort. Reserved = årskort. Spot = restplads til halv pris, men du kan blive bedt om at gå."],
+["Hvornår bruger man hvad?","<ul><li><b>Public cloud:</b> startups, apps med svingende belastning, og når du vil undgå investeringer på forhånd.</li><li><b>Private cloud:</b> strenge krav til lovgivning eller kontrol, og når data ikke må forlade huset.</li><li><b>Hybrid cloud:</b> gradvis migrering, eller når nogle data skal blive on-prem, mens resten flytter til skyen.</li><li><b>IaaS:</b> lift-and-shift af eksisterende servere, test og udvikling.</li><li><b>PaaS:</b> udviklere, der bare vil bygge apps og API'er.</li><li><b>SaaS:</b> færdige løsninger som mail, kontorpakker og CRM.</li></ul>","Eksamen elsker scenarier: læs hvad virksomheden VIL, og find den model, der giver dem præcis det – hverken mere eller mindre."]],
+quiz:[
+["Du har en stabil workload, der kører døgnet rundt i 3 år. Hvilken prismodel er billigst?",["Reserved Instances","Pay-as-you-go","Spot VMs","Den gratis tier"],0,"Når du ved, at noget kører konstant, giver en reservation på 1 eller 3 år den største rabat."],
+["Hvilken prismodel bruger Azures ledige kapacitet med stor rabat, men kan blive afbrudt?",["Spot VMs","Reserved Instances","Savings plan","Pay-as-you-go"],0,"Spot VMs er billige, men Azure kan tage kapaciteten tilbage."],
+["En startup ved ikke, hvor meget den skal bruge, og vil kunne stoppe når som helst. Hvilken prismodel?",["Pay-as-you-go","Reserved Instances i 3 år","Køb af egne servere","Private cloud"],0,"Pay-as-you-go har ingen binding – perfekt til usikkert forbrug."],
+["Hvad forpligter du dig til med en savings plan for compute?",["Et fast timeforbrug i 1 eller 3 år","En bestemt VM-størrelse for altid","Kun at bruge én region","Ingenting"],0,"Du binder dig til et beløb per time, men kan frit vælge compute-services."],
+["En bank skal holde nogle data i eget datacenter af lovmæssige grunde, men vil bruge cloud til resten. Hvilken model?",["Hybrid cloud","Public cloud","SaaS","Serverless"],0,"Hybrid lader følsomme data blive on-prem, mens resten kører i public cloud."],
+["Ja eller nej: Spot VMs egner sig godt til kritiske systemer, der aldrig må stoppe.",["Ja","Nej"],1,"Nej. Spot VMs kan blive afbrudt, så de passer til opgaver, der kan tåle pauser."]],
+cards:[["Reserved Instances","Bind dig 1 eller 3 år til en ressource, og få stor rabat."],["Savings plan","Fast timeforbrug i 1 eller 3 år på tværs af compute-services."],["Spot VMs","Ledig kapacitet med stor rabat, men kan blive afbrudt."]]},
+d2:{lessons:[
+["Datacentre og VM-ressourcer","<p>Et <b>Azure-datacenter</b> er en fysisk bygning med servere i racks og egen strøm, køling og netværk. Datacentre samles i availability zones og regioner, og kunder får ikke adgang til dem.</p><p>En virtuel maskine skal bruge flere ressourcer:</p><ul><li><b>Størrelse:</b> antal CPU'er og mængden af RAM.</li><li><b>Image:</b> operativsystemet, fx Windows eller Linux.</li><li><b>Diske:</b> en OS-disk og evt. datadiske (managed disks).</li><li><b>Netværk:</b> et VNet med et subnet og et netværksinterface (NIC). Evt. en offentlig IP.</li><li><b>Network security group (NSG):</b> regler, der tillader eller blokerer trafik.</li></ul>","En VM er som en maskine i fitnesscentret: den skal have strøm (størrelse), et program (OS), et sted at gemme dine sæt (disk) og en plads i salen (netværk)."],
+["Storage-kontotyper","<ul><li><b>Standard general-purpose v2:</b> anbefales til de fleste scenarier. Understøtter blob, files, queue og table og alle redundansmuligheder.</li><li><b>Premium block blobs:</b> hurtig blob-lagring til mange små transaktioner. LRS eller ZRS.</li><li><b>Premium file shares:</b> hurtige fildelinger. LRS eller ZRS.</li><li><b>Premium page blobs:</b> til fx VM-diske. Kun LRS.</li></ul><p>Hver storage-tjeneste får sin egen adresse, fx <i>https://mitnavn.blob.core.windows.net</i>. Derfor skal navnet være unikt.</p>","Standard v2 er kondimaskinen, der kan det hele. Premium er specialudstyret til dem, der har brug for ekstra fart."],
+["Hvor skal appen hostes?","<ul><li><b>App Service (web apps):</b> du har bare kode til en webapp eller et API og vil ikke styre servere.</li><li><b>Containers:</b> appen er pakket med alt, den skal bruge, eller består af mange små microservices.</li><li><b>Virtuelle maskiner:</b> du skal have fuld kontrol over OS'et, eller appen er gammel software, der kræver en bestemt opsætning.</li><li><b>Azure Functions:</b> små stykker kode, der kører ved hændelser.</li></ul>","Vælg den mindst tunge løsning, der kan løse opgaven. Det er ofte det rigtige svar i eksamen."]],
+quiz:[
+["Hvilken af disse er IKKE en ressource, en VM typisk skal bruge?",["En management group","En disk","Et netværksinterface (NIC)","Et virtuelt netværk"],0,"En VM skal bruge disk, netværk og NIC. Management groups handler om styring af subscriptions."],
+["Hvad bruges en network security group (NSG) til?",["At tillade eller blokere netværkstrafik","At sende e-mails","At gemme filer","At styre budgetter"],0,"En NSG indeholder regler for, hvilken trafik der må komme ind og ud."],
+["Hvad er et subnet?",["En opdeling af et VNet i mindre netværk","En type storage","En VM-størrelse","En region"],0,"Subnets deler et VNet op, så du kan adskille fx web og database."],
+["Du har en gammel app, der kræver et bestemt OS og fuld kontrol. Hvor hoster du den?",["På en virtuel maskine","I App Service","I Azure Functions","I Microsoft 365"],0,"Fuld kontrol over OS'et kræver en VM (IaaS)."],
+["Du har et Node.js-API og vil ikke styre servere. Hvad er det oplagte valg?",["App Service","En virtuel maskine","Azure Data Box","ExpressRoute"],0,"App Service hoster web apps og API'er som PaaS."],
+["Hvilken storage-kontotype anbefales til de fleste scenarier?",["Standard general-purpose v2","Premium page blobs","Premium file shares","Premium block blobs"],0,"Standard v2 understøtter alle storage-tjenester og alle redundansmuligheder."],
+["Hvilken premium-kontotype bruges fx til VM-diske og understøtter kun LRS?",["Premium page blobs","Premium block blobs","Standard general-purpose v2","Premium file shares"],0,"Premium page blobs er lavet til diske og understøtter kun LRS."],
+["Hvad giver Microsoft Entra Domain Services?",["Domænetjenester som domain join, group policy, LDAP og Kerberos uden egne domain controllers","En gratis VPN","Backup af VM'er","Omkostningsrapporter"],0,"Det er nyttigt, når gamle apps kræver klassiske domænetjenester i skyen."],
+["Hvad er et Azure-datacenter?",["En fysisk bygning med servere, strøm, køling og netværk","En subscription","En virtuel maskine","En resource group"],0,"Datacentre er de fysiske byggesten, som zoner og regioner består af."],
+["Ja eller nej: Som kunde kan du få fysisk adgang til et Azure-datacenter.",["Ja","Nej"],1,"Nej. Kunder har ikke adgang til Microsofts datacentre."],
+["Ja eller nej: Et VNet kan have flere subnets.",["Ja","Nej"],0,"Ja. Du kan dele et VNet op i så mange subnets, som adresserummet tillader."],
+["Ja eller nej: Microsoft Entra ID er den samme service som Microsoft Entra Domain Services.",["Ja","Nej"],1,"Nej. Entra ID er cloud-identitet. Domain Services giver klassiske domænetjenester som LDAP og Kerberos."]],
+cards:[["Network security group","Regler, der tillader eller blokerer netværkstrafik."],["Subnet","En opdeling af et VNet i mindre netværk."],["Standard general-purpose v2","Den anbefalede storage-kontotype til de fleste scenarier."],["Entra Domain Services","Domain join, group policy, LDAP og Kerberos uden egne domain controllers."]]},
+d3:{lessons:[],
+quiz:[
+["Hvilke shells kan du vælge i Azure Cloud Shell?",["Bash og PowerShell","Kun kommandoprompt","Kun Bicep","Kun Python"],0,"Cloud Shell giver dig Bash eller PowerShell direkte i browseren."],
+["Hvilken fordel giver Cost Management ud over at vise forbrug?",["Budgetter og alarmer, når du nærmer dig grænsen","Automatisk sletning af alle ressourcer","Gratis VM'er","Adgangsstyring"],0,"Du kan sætte budgetter og få besked, før regningen løber løbsk."],
+["Ja eller nej: Pricing calculator viser din faktiske regning for sidste måned.",["Ja","Nej"],1,"Nej. Pricing calculator estimerer fremtidige priser. Faktisk forbrug ser du i Cost Management."]],
+cards:[]}
+};
+for(const k in ADD){D[k].lessons.push(...ADD[k].lessons);D[k].quiz.push(...ADD[k].quiz);D[k].cards.push(...ADD[k].cards);}
+const SYL={
+d1:["Definér cloud computing","Shared responsibility model","Public, private og hybrid cloud","Hvornår man bruger hver cloud-model","Consumption-based model","Sammenlign prismodeller","Serverless","High availability og scalability","Reliability og predictability","Security og governance","Manageability","IaaS","PaaS","SaaS","Hvornår man bruger IaaS, PaaS og SaaS"],
+d2:["Regioner, region pairs og sovereign regions","Availability zones","Azure-datacentre","Resources og resource groups","Subscriptions","Management groups","Hierarkiet: MG, subscription, RG","Containers vs. VM'er vs. Functions","VM'er, VM Scale Sets, availability sets og Azure Virtual Desktop","Ressourcer en VM skal bruge","Hosting: web apps, containers og VM'er","VNet, subnets, peering, Azure DNS, VPN Gateway og ExpressRoute","Public og private endpoints","Storage-tjenester","Storage tiers","Redundans (LRS, ZRS, GRS, GZRS)","Storage-kontotyper","AzCopy, Storage Explorer og File Sync","Azure Migrate og Azure Data Box","Microsoft Entra ID og Entra Domain Services","SSO, MFA og passwordless","External identities (B2B og B2C)","Conditional Access","Azure RBAC","Zero Trust","Defense in depth","Microsoft Defender for Cloud"],
+d3:["Faktorer der påvirker prisen","Pricing calculator","Cost Management","Tags","Microsoft Purview","Azure Policy","Resource locks","Azure portal","Cloud Shell, Azure CLI og Azure PowerShell","Azure Arc","Infrastructure as Code","ARM og ARM templates","Azure Advisor","Azure Service Health","Azure Monitor, Log Analytics, alerts og Application Insights"]};
+const SYLN=SYL.d1.length+SYL.d2.length+SYL.d3.length;
+function sylDone(){return Object.keys(S.syl||{}).length;}
+function syllabus(){view="syl";let h=`${topbar("Pensumtjek")}<section class="lesson" style="--c:var(--d2)"><h2>Officielt pensum</h2><p class="meta">Alle emner fra Microsofts study guide (gældende fra 20. juli 2026). Sæt flueben, når du kan forklare emnet med dine egne ord – det er den bedste test af, om du har styr på det.</p><p><b>${sylDone()} af ${SYLN}</b> emner på plads</p>${prog(sylDone()/SYLN,"var(--d1)")}</section>`;
+ ["d1","d2","d3"].forEach(d=>{h+=`<h2>${D[d].name} (${D[d].pct})</h2><div class="stations">`+SYL[d].map((t,i)=>{const id=d+"-"+i;return `<label class="syl"><input type="checkbox" data-syl="${id}" ${S.syl[id]?"checked":""}><span>${t}</span></label>`;}).join("")+`</div>`;});
+ app.innerHTML=h;}
+const TAUNT=["Dragen griner: »Den fejl koster dig et liv!« 🔥","Dragen spyr ild – du mister et liv 💔","»Haha! Dine servere er nede!« brøler dragen","Dragen slår med halen. Av! 💔"];
+const MODEC={wod:"var(--d3)",retry:"var(--d2)",boss:"var(--ex)"};
+const MODEN={wod:"Dagens WOD",retry:"Genoptræning",boss:"Boss-kamp"};
+const key=q=>q[0];
+function mkOpts(q){const o=q[1].map((t,i)=>({t,ok:i===q[2]}));return o.length===2?o:shuffle(o);}
+function track(q,ok){const k=key(q);if(ok){S.mast[k]=1;delete S.miss[k];}else S.miss[k]=1;save();}
+function readiness(){const w={d1:.275,d2:.375,d3:.35};let r=0;for(const d in w){const t=D[d].quiz.length,m=D[d].quiz.filter(q=>S.mast[key(q)]).length;r+=w[d]*m/t;}return Math.round(r*100);}
+
+const GOOD=["Ny PR! 🏆","Let som en opvarmning 💨","Det sad i skabet!","Tungt løft – flot klaret 💪","Cloud-gains! 📈","Ren teknik!"];
+const BAD=["Fejl er bare et sæt mere 🔁","Ingen gains uden lidt sved 😅","Godt forsøg – læs forklaringen, så sidder den næste gang","Den tager vi igen i næste sæt"];
+const LEVELS=[[20,"Opvarmning"],[50,"Motionist"],[90,"Cloud-løfter"],[140,"Azure-atlet"],[200,"Cloud-legende"]];
+const KEY="az900gym-v1";
+const FRESH=()=>({kg:20,seen:{d1:[],d2:[],d3:[]},best:{d1:0,d2:0,d3:0},exam:0,streak:0,last:"",badges:[],sprint:0,sound:true,maxCombo:0,cardsDone:0,perfect:0,miss:{},mast:{},boss:0,wod:"",wodCount:0,syl:{},real:0,lq:{},fs:17});
+let S=FRESH();
+try{const r=localStorage.getItem(KEY);if(r){const p=JSON.parse(r);S=Object.assign(FRESH(),p);}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function today(o){const d=new Date(Date.now()-(o||0)*864e5);return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+function touchDay(){const t=today();if(S.last===t)return;S.streak=S.last===today(1)?S.streak+1:1;S.last=t;save();}
+function liveStreak(){return (S.last===today()||S.last===today(1))?S.streak:0;}
+
+const app=document.getElementById("app");
+let view="home",cur={},timerId=null,speakId=0,auto=false;
+const fmt=n=>n.toLocaleString("da-DK");
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const strip=s=>s.replace(/<li>/g," ").replace(/<[^>]+>/g," ").replace(/\s+/g," ");
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* speech */
+const synth=window.speechSynthesis;
+function speak(text,onend){if(!synth)return;try{synth.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="da-DK";const v=(synth.getVoices()||[]).find(v=>v.lang&&v.lang.toLowerCase().startsWith("da"));if(v)u.voice=v;u.rate=1;if(onend)u.onend=onend;synth.speak(u);}catch(e){}}
+function stopSpeak(){speakId++;try{synth&&synth.cancel()}catch(e){}}
+
+/* fun: sound, confetti, toast, badges, coach */
+let AC=null;
+function tone(f,d,type,vol,delay){if(!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime+(delay||0),o=AC.createOscillator(),g=AC.createGain();o.type=type||"sine";o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(vol||.15,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.05);}catch(e){}}
+const sfx={ok(){tone(660,.12,"triangle");tone(990,.2,"triangle",.15,.09)},no(){tone(150,.28,"sawtooth",.07)},clang(){[523,659,784,1046].forEach((f,i)=>tone(f,.35,"square",.06,i*.09));tone(1760,.7,"triangle",.05,.38)},badge(){[784,988,1175,1568].forEach((f,i)=>tone(f,.22,"triangle",.12,i*.08))}};
+const RM=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+function confetti(n){if(RM)return;const cs=["#D7263D","#1E5AA8","#E0A800","#2E8B57","#E6E8EB"];for(let i=0;i<n;i++){const e=document.createElement("div");e.className="cf";e.style.left=Math.random()*100+"vw";e.style.background=cs[i%5];e.style.animationDuration=(1.4+Math.random()*1.5)+"s";e.style.animationDelay=Math.random()*.4+"s";document.body.appendChild(e);setTimeout(()=>e.remove(),3500);}}
+function toast(m){document.querySelectorAll(".toast").forEach(t=>t.remove());const t=document.createElement("div");t.className="toast";t.setAttribute("role","status");t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2800);}
+const BADGES=[
+["first","💪","Første løft","Første rigtige svar",()=>S.kg>20],
+["combo","🔥","Combo-kongen","5 rigtige i træk",()=>S.maxCombo>=5],
+["perfect","🏆","Fejlfrit sæt","100 % i en quiz",()=>S.perfect>0],
+["reader","📚","Bogorm i bodyen","Alle lektioner læst",()=>["d1","d2","d3"].every(d=>S.seen[d].length>=D[d].lessons.length)],
+["cards","🃏","Kortkaster","Et helt flashcard-sæt",()=>S.cardsDone>0],
+["streak","📅","Stædig","Tre dage i træk",()=>S.streak>=3],
+["sprint","⚡","Lynhurtig","10+ i en sprint",()=>S.sprint>=10],
+["club","🏋️","100 kg-klubben","Løft 100 kg",()=>S.kg>=100],
+["pass","🎓","Eksamensklar","700+ på prøveeksamen",()=>S.exam>=700],
+["boss","🐉","Dragedræber","Besejr Downtime-Dragen",()=>S.boss>0],
+["wod","🏅","WOD-kriger","Gennemfør 3 WODs",()=>S.wodCount>=3],
+["brain","🧠","Hjernemuskel","Mestr 60 spørgsmål",()=>Object.keys(S.mast).length>=60],
+["ready","🚀","Klar til start","Eksamensklar-meter på 90 %",()=>readiness()>=90],
+["syl","📋","Pensum-mester","Alle pensumemner afkrydset",()=>sylDone()>=SYLN],
+["real","🎯","Eksamensparat","800+ på realistisk eksamen",()=>(S.real||0)>=800],
+["stars","⭐","Stjerne-elev","10 hurtig-checks klaret",()=>Object.keys(S.lq||{}).length>=10],
+["allstars","🌟","Læse-legende","Alle hurtig-checks klaret",()=>["d1","d2","d3"].every(d=>D[d].lessons.every((_,k)=>S.lq[d+"-"+k]))]];
+function checkBadges(){const nw=BADGES.filter(b=>!S.badges.includes(b[0])&&b[4]());if(!nw.length)return;nw.forEach(b=>S.badges.push(b[0]));save();setTimeout(()=>{sfx.badge();confetti(30);toast("Nyt badge: "+nw[0][1]+" "+nw[0][2]);},450);}
+function addKg(g,quiet){const before=level(S.kg).name;S.kg+=g;save();const now=level(S.kg).name;if(now!==before){if(quiet){toast("Nyt niveau: "+now+" 🎉");sfx.badge();}else levelUp(now);}}
+function levelUp(name){sfx.clang();confetti(70);const o=document.createElement("div");o.className="lvl";o.dataset.act="closeLvl";o.setAttribute("role","dialog");o.innerHTML=`<div class="box"><p class="big cond">Nyt niveau!</p><h2>${name}</h2><p>Stangen vejer nu ${fmt(S.kg)} kg. Tryk for at fortsætte.</p></div>`;document.body.appendChild(o);}
+const COACH=["Ingen hviledag for cloud-muskler! Et hurtigt sæt i dag?","Dine data er ALTID dit ansvar. Skriv det på armen, hvis det er det, der skal til.","LRS, ZRS, GRS … det er bare bogstaver, indtil du har løftet dem ti gange.","En sprint om dagen holder buzzwordsene væk!","Svært spørgsmål? Godt. Det er der, musklerne vokser.","Elasticity er, når serverne laver squats efter behov.","Du behøver ikke være perfekt. Du skal bare have 700 point.","Azure Advisor giver gode råd, men jeg er gratis OG sjovere.","Archive tier er som dine gamle løbesko: billige at gemme, bøvlede at finde frem.","Zero Trust: jeg stoler ikke engang på, at du har strakt ud.","Downtime-Dragen hader folk, der kender forskel på LRS og ZRS. Vær en af dem.","Dagens WOD tager to minutter. Det er kortere end køen ved kassen!","Genoptræning er der, hvor de rigtige gains sker.","Når meteret rammer 90 %, er du klar til at booke eksamen. 🎓","Tryk på de understregede ord i lektionerne – så forklarer jeg dem med det samme.","Hver lektion har et hurtig-check. Saml alle stjernerne! ⭐"];
+let coachI=Math.floor(Math.random()*COACH.length);
+
+/* barbell */
+const PL=[[25,"#D7263D",92,13],[20,"#1E5AA8",92,11],[15,"#E0A800",80,10],[10,"#2E8B57",66,9],[5,"#E6E8EB",48,7],[2.5,"#5C6570",38,6]];
+function barbell(kg){let side=Math.max(0,(kg-20)/2);const plates=[];let used=0;
+ for(const p of PL){while(side>=p[0]-1e-9){if(used+p[3]+1>92)break;plates.push(p);side-=p[0];used+=p[3]+1;}}
+ const W=360,H=110,cy=55;let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Vægtstang med ${fmt(kg)} kg">`;
+ s+=`<rect x="4" y="${cy-3}" width="${W-8}" height="6" rx="3" fill="var(--muted)"/>`;
+ s+=`<rect x="4" y="${cy-5}" width="102" height="10" rx="3" fill="var(--muted)"/><rect x="${W-106}" y="${cy-5}" width="102" height="10" rx="3" fill="var(--muted)"/>`;
+ s+=`<rect x="104" y="${cy-11}" width="7" height="22" rx="2" fill="var(--ink)"/><rect x="${W-111}" y="${cy-11}" width="7" height="22" rx="2" fill="var(--ink)"/>`;
+ let xl=103,xr=W-104;
+ plates.forEach(([k,c,h,w])=>{xl-=w+1;s+=`<rect x="${xl}" y="${cy-h/2}" width="${w}" height="${h}" rx="2.5" fill="${c}" stroke="rgba(0,0,0,.28)"/>`;s+=`<rect x="${xr+1}" y="${cy-h/2}" width="${w}" height="${h}" rx="2.5" fill="${c}" stroke="rgba(0,0,0,.28)"/>`;xr+=w+1;});
+ return s+"</svg>";}
+function level(kg){let i=0;for(let j=0;j<LEVELS.length;j++)if(kg>=LEVELS[j][0])i=j;return{name:LEVELS[i][1],next:LEVELS[i+1]};}
+
+/* shared bits */
+const topbar=(label)=>`<div class="top"><button class="btn ghost" data-go="home">Tilbage til oversigt</button><span class="count">${label}</span></div>`;
+const prog=(f,c)=>`<div class="prog" style="--c:${c}"><div style="width:${Math.round(f*100)}%"></div></div>`;
+
+/* home */
+function home(){view="home";const lv=level(S.kg),st=liveStreak();
+ app.innerHTML=`<header class="hero"><button class="snd" data-act="snd" aria-label="${S.sound?"Slå lyd fra":"Slå lyd til"}">${S.sound?"🔊":"🔇"}</button>${barbell(S.kg)}
+ <h1 class="kg">${fmt(S.kg)} kg</h1>
+ <p class="lv">${lv.name}${lv.next?` – ${fmt(lv.next[0]-S.kg)} kg til ${lv.next[1]}`:" – topniveau nået!"}</p>
+ <p class="streak">🔥 ${st} ${st===1?"dag":"dage"} i træk${S.exam?`, bedste prøveeksamen: ${S.exam}`:""}</p></header>
+ <button class="coach" data-act="coach" aria-label="Nyt råd fra Coach Kumulus"><span class="av">⛅</span><span class="bub"><span class="who">Coach Kumulus</span>${COACH[coachI]}</span></button>
+ ${readyBox()}
+ <p class="intro">Hvert rigtigt svar lægger 2,5 kg på stangen. Tre rigtige i træk giver et bonusløft. Tallet på hver skive er områdets vægt i eksamen.</p>
+ <h2>Træningsstationer</h2>
+ <div class="stations">${["d1","d2","d3"].map(station).join("")}</div>
+ <h2>Specialtræning</h2>
+ <div class="stations">${specials()}</div>
+ <section class="sprint"><h2>Sprint ⚡</h2><p>60 sekunder, så mange rigtige som muligt. Forkerte svar koster 3 sekunder.${S.sprint?` Din rekord: ${S.sprint}.`:""}</p><button class="btn" data-go="sprint">Start sprint</button></section>
+ <section class="exam"><h2>Prøveeksamen</h2><p><b>Realistisk eksamen:</b> 40 opgaver på engelsk med samme opgavetyper, regler og tid som den rigtige.${S.real?` Din bedste: ${S.real}.`:""}</p><p><b>Hurtig prøve:</b> 40 spørgsmål på dansk.${S.exam?` Din bedste: ${S.exam}.`:""}</p><div class="acts"><button class="btn" data-go="real">Start realistisk eksamen</button><button class="btn alt" data-go="exam">Hurtig prøve på dansk</button></div></section>
+ <h2>Badges (${S.badges.length} af ${BADGES.length})</h2><div class="badges">${BADGES.map(b=>`<div class="bd${S.badges.includes(b[0])?"":" locked"}"><span class="ic">${b[1]}</span>${b[2]}<small>${b[3]}</small></div>`).join("")}</div>
+ <div class="foot"><button class="link" data-act="reset">Nulstil fremskridt</button></div>`;}
+function readyBox(){const r=readiness(),msg=r<40?"Stadig opvarmning – kør på!":r<70?"Du er godt i gang. Fortsæt med quizzer og WOD.":r<90?"Tæt på eksamensform! Tag nogle prøveeksamener.":"Du er klar – book eksamen! 🎓";
+ return `<section class="ready"><div class="rtop"><h2>Eksamensklar-meter</h2><span class="rpct cond">${r} %</span></div><p class="meta">${msg} Meteret viser, hvor mange spørgsmål du har svaret rigtigt på mindst én gang, vægtet som i eksamen.</p>${["d1","d2","d3"].map(d=>{const t=D[d].quiz.length,m=D[d].quiz.filter(q=>S.mast[key(q)]).length;return `<div class="rrow"><span>${D[d].name}</span><span>${m}/${t}</span></div>${prog(m/t,D[d].color)}`}).join("")}<div class="row" style="margin:6px 0 10px"><button class="btn" data-go="syl">Pensumtjek: ${sylDone()} af ${SYLN} emner</button></div></section>`;}
+function specials(){const done=S.wod===today(),miss=Object.keys(S.miss).length;
+ return `<article class="st"><div class="plate" style="--c:var(--d3);--pc:#16191D">WOD</div><div><h3>Dagens WOD</h3><p class="meta">5 spørgsmål valgt ud fra dine svage punkter. Dobbelt kilo på hvert rigtigt svar – én gang om dagen.</p><div class="acts">${done?`<button class="btn" disabled>Klaret i dag ✅</button>`:`<button class="btn" data-go="wod">Start WOD</button>`}</div></div></article>
+ <article class="st"><div class="plate" style="--c:var(--d2)">${miss}</div><div><h3>Genoptræning</h3><p class="meta">${miss?`Du har ${miss} spørgsmål, du har svaret forkert på. Svar rigtigt, så forsvinder de.`:"Ingen fejl at genoptræne lige nu. Flot!"}</p><div class="acts"><button class="btn" data-go="retry" ${miss?"":"disabled"}>Genoptræn fejl</button></div></div></article>
+ <article class="st"><div class="plate" style="--c:var(--ex);font-size:30px">🐉</div><div><h3>Boss-kamp</h3><p class="meta">Besejr Downtime-Dragen med 12 HP. Du har 3 liv, og tre rigtige i træk giver kritiske slag.${S.boss?` Besejret ${S.boss} ${S.boss===1?"gang":"gange"}.`:""}</p><div class="acts"><button class="btn" data-go="boss">Udfordr dragen</button></div></div></article>`;}
+function station(d){const x=D[d];return `<article class="st"><div class="plate" style="--c:${x.color};--pc:${x.pc}">${x.pct}</div><div>
+ <h3>${x.name}</h3><p class="meta">${S.seen[d].length} af ${x.lessons.length} lektioner læst, ${x.quiz.length} spørgsmål, quiz-rekord ${S.best[d]} %</p>
+ <div class="acts"><button class="btn" data-go="lesson" data-d="${d}">Lær</button><button class="btn" data-go="quiz" data-d="${d}">Quiz</button><button class="btn" data-go="cards" data-d="${d}">Flashcards</button></div></div></article>`;}
+
+/* lessons */
+function readMin(L){return Math.max(1,Math.round(strip(L[1]+" "+L[2]).split(" ").length/170));}
+function termDef(t){const s=t.toLowerCase().replace(/[():]/g,"").trim();if(s.length<3)return null;for(const d of ["d1","d2","d3"])for(const c of D[d].cards){const k=c[0].toLowerCase();if(k===s||k.startsWith(s)||s.startsWith(k))return c;}return null;}
+function termify(h){return h.replace(/<b>(.*?)<\/b>/g,(m,t)=>{const c=termDef(t.replace(/<[^>]+>/g,""));return c?`<button class="term" data-act="term" data-t="${encodeURIComponent(c[0])}">${t}</button>`:`<b>${t}</b>`;});}
+function lessonQ(d,i){const L=D[d].lessons[i];const terms=[...L[1].matchAll(/<b>(.*?)<\/b>/g)].map(m=>m[1].replace(/<[^>]+>/g,"").toLowerCase().replace(/[():]/g,"").trim()).filter(t=>t.length>2);let best=null,bs=0;
+ D[d].quiz.forEach(q=>{const txt=(q[0]+" "+q[1][q[2]]).toLowerCase();let sc=0;terms.forEach(t=>{if(txt.includes(t))sc++;});if(sc>bs){bs=sc;best=q;}});return best;}
+function showSheet(t,txt){document.querySelectorAll(".sheet").forEach(e=>e.remove());const e=document.createElement("div");e.className="sheet";e.dataset.act="closeSheet";e.setAttribute("role","dialog");e.innerHTML=`<div class="sbox"><b class="cond">${t}</b><p>${txt}</p><small>Tryk for at lukke</small></div>`;document.body.appendChild(e);}
+function lessonMap(d){view="lmap";stopSpeak();auto=false;cur={d};const x=D[d],seen=S.seen[d],n=x.lessons.length,next=x.lessons.findIndex((_,k)=>!seen.includes(k)),stars=x.lessons.filter((_,k)=>S.lq[d+"-"+k]).length;
+ app.innerHTML=`${topbar(x.name)}<section class="lesson" style="--c:${x.color}"><h2>Læseplan</h2><p class="meta">${seen.length} af ${n} lektioner læst, ${stars} ⭐ hurtig-checks klaret. Hver ny lektion giver +2,5 kg, og hver stjerne giver +2,5 kg mere.</p>${prog(seen.length/n,x.color)}<button class="btn primary wide" data-act="openL" data-i="${next<0?0:next}">${next<0?"Læs forfra":seen.length?"Fortsæt læsning":"Start første lektion"}</button></section>
+ <ol class="lmap" style="--c:${x.color};--pc:${x.pc}">${x.lessons.map((L,k)=>{const done=seen.includes(k),st=S.lq[d+"-"+k];return `<li><button class="lm${done?" done":""}${k===next?" nx":""}" data-act="openL" data-i="${k}"><span class="lmn">${st?"⭐":done?"✓":k+1}</span><span class="lmt">${L[0]}<small>${readMin(L)} min${k===next?", næste op":""}</small></span></button></li>`;}).join("")}</ol>`;}
+function lesson(){view="lesson";const d=cur.d,x=D[d],L=x.lessons[cur.i],n=x.lessons.length,last=cur.i===n-1,k=d+"-"+cur.i;
+ if(!S.seen[d].includes(cur.i)){S.seen[d].push(cur.i);addKg(2.5,true);save();if(S.seen[d].length===n)setTimeout(()=>{confetti(80);sfx.clang();toast(x.name+": alle lektioner læst! 📚");},300);checkBadges();}
+ const q=lessonQ(d,cur.i);cur.lq=q?{q,opts:mkOpts(q),done:false}:null;
+ app.innerHTML=`<div class="top"><button class="btn ghost" data-go="lesson" data-d="${d}">Læseplan</button><span class="count">Lektion ${cur.i+1} af ${n}, ${readMin(L)} min</span></div>${prog((cur.i+1)/n,x.color)}
+ <article class="lesson" style="--c:${x.color};font-size:${S.fs||17}px"><div class="fsz"><button data-act="fs" data-v="-2" aria-label="Mindre tekst">A−</button><button data-act="fs" data-v="2" aria-label="Større tekst">A+</button></div><h2>${L[0]}</h2><div class="body">${termify(L[1])}</div><aside class="tip"><b>Træner-tip:</b> ${L[2]}</aside><p class="hint2">Tryk på de understregede ord for en hurtig forklaring.</p></article>
+ ${q?`<section class="qc" style="--c:${x.color}"><h3>⚡ Hurtig-check${S.lq[k]?" ⭐":""}</h3><p class="qcq">${q[0]}</p><div class="opts">${cur.lq.opts.map((o,j)=>`<button class="opt" data-act="lq" data-i="${j}"><span class="let">${"ABCD"[j]}</span><span>${o.t}</span></button>`).join("")}</div><div id="lqfb" aria-live="polite"></div></section>`:""}
+ <div class="row"><button class="btn" data-act="prev" ${cur.i===0?"disabled":""}>Forrige</button><button class="btn" data-act="speakL">🔊 Læs op</button>${last?`<button class="btn primary" data-go="quiz" data-d="${d}">Tag quizzen</button>`:`<button class="btn primary" data-act="next">Næste</button>`}</div>
+ <label class="auto" style="--c:${x.color}"><input type="checkbox" id="auto" ${auto?"checked":""}> Læs alle lektioner op i træk – perfekt mellem sættene</label>`;
+ if(auto)speakLesson();}
+function speakLesson(){const L=D[cur.d].lessons[cur.i];stopSpeak();const id=speakId;
+ speak(strip(L[0]+". "+L[1]+" Træner-tip: "+L[2]),()=>{if(id!==speakId||!auto||view!=="lesson")return;if(cur.i<D[cur.d].lessons.length-1){cur.i++;lesson();}else{auto=false;lesson();}});}
+
+/* quiz + exam */
+function startQuiz(d,exam){let pool=[];
+ if(exam){[["d1",11],["d2",15],["d3",14]].forEach(([k,n])=>shuffle(D[k].quiz).slice(0,n).forEach(q=>pool.push({q,d:k})));pool=shuffle(pool);}
+ else pool=shuffle(D[d].quiz).slice(0,10).map(q=>({q,d}));
+ cur={exam,d,list:pool.map(p=>({...p,opts:mkOpts(p.q)})),i:0,right:0,combo:0,wrong:[],end:Date.now()+45*60e3};
+ if(exam)timerId=setInterval(tick,1000);question();}
+function allQ(){const p=[];["d1","d2","d3"].forEach(k=>D[k].quiz.forEach(q=>p.push({q,d:k})));return p;}
+function startMode(m){const all=allQ();let pool;
+ if(m==="wod"){const seen=new Set();pool=[];shuffle(all.filter(p=>S.miss[key(p.q)])).concat(shuffle(all.filter(p=>!S.mast[key(p.q)])),shuffle(all)).forEach(p=>{if(pool.length<5&&!seen.has(key(p.q))){seen.add(key(p.q));pool.push(p);}});}
+ else if(m==="retry")pool=shuffle(all.filter(p=>S.miss[key(p.q)])).slice(0,10);
+ else pool=shuffle(all);
+ if(!pool.length){toast("Ingen spørgsmål her lige nu");home();return;}
+ cur={mode:m,exam:false,d:null,list:pool.map(p=>({...p,opts:mkOpts(p.q)})),i:0,right:0,combo:0,wrong:[],hp:12,max:12,hearts:3};question();}
+function bossBar(){return `<div class="boss"><div class="bname"><span class="drag">🐉</span><div><b>Downtime-Dragen</b><div class="hp"><div style="width:${cur.hp/cur.max*100}%"></div></div><small>${cur.hp} af ${cur.max} HP</small></div></div><div class="hearts" aria-label="${cur.hearts} liv tilbage">${"❤️".repeat(Math.max(0,cur.hearts))}${"🖤".repeat(3-Math.max(0,cur.hearts))}</div></div>`;}
+function qColor(){return cur.exam?"var(--ex)":cur.mode?MODEC[cur.mode]:D[cur.d].color;}
+function modeFinish(n){const m=cur.mode,c=MODEC[m],answered=cur.right+cur.wrong.length;let big,sub,h;
+ if(m==="boss"){const win=cur.hp<=0;if(win){S.boss++;confetti(90);sfx.clang();}else sfx.no();big=win?"🏆":"🐉";sub=`${cur.right} rigtige af ${answered} – dragen har ${cur.hp} HP tilbage`;h=win?"Downtime-Dragen er besejret! Serverne kører igen 🎉":"Dragen vandt denne gang. Genoptræn dine fejl, og kom stærkere tilbage!";}
+ else if(m==="wod"){S.wod=today();S.wodCount++;if(cur.right===n){confetti(60);sfx.clang();}big=`${cur.right}/${n}`;sub="Dagens WOD er gennemført – dobbelt kilo på hvert rigtigt svar";h=cur.right===n?"Perfekt WOD! 💪":"WOD klaret! Kom igen i morgen for en ny.";}
+ else{const left=Object.keys(S.miss).length;big=`${cur.right}/${n}`;sub=`Fejl tilbage at genoptræne: ${left}`;h=left?"Hver genoptræning gør de svage punkter stærkere.":"Alle fejl er rettet! Stærkt! 🧠";if(!left){confetti(50);sfx.badge();}}
+ save();checkBadges();
+ const again=m==="boss"?`<button class="btn primary" data-go="boss">Ny boss-kamp</button>`:(m==="retry"&&Object.keys(S.miss).length)?`<button class="btn primary" data-go="retry">Genoptræn igen</button>`:"";
+ app.innerHTML=`${topbar(MODEN[m])}<section class="result" style="--c:${c==="var(--d3)"?"var(--ink)":c}"><p class="big cond">${big}</p><p>${sub}</p><h2>${h}</h2></section>${review()}<div class="row"><button class="btn" data-go="home">Tilbage til oversigt</button>${again}</div>`;window.scrollTo(0,0);}
+function timeLeft(){const s=Math.max(0,Math.round((cur.end-Date.now())/1000));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
+function tick(){const t=document.getElementById("timer");if(t)t.textContent=timeLeft();if(Date.now()>=cur.end)finish();}
+function question(){view="quiz";const it=cur.list[cur.i],c=qColor(),boss=cur.mode==="boss";cur.answered=false;
+ const label=boss?`Runde ${cur.i+1}`:`Spørgsmål ${cur.i+1} af ${cur.list.length}${cur.exam?` <span id="timer" class="timer">${timeLeft()}</span>`:""}`;
+ app.innerHTML=`${topbar(label)}${boss?bossBar():prog(cur.i/cur.list.length,c)}
+ <div class="qwrap">${(cur.exam||cur.mode)?`<p class="tag">${D[it.d].name}</p>`:""}<h2 class="q">${it.q[0]}</h2>
+ <div class="opts">${it.opts.map((o,i)=>`<button class="opt" data-act="answer" data-i="${i}"><span class="let">${"ABCD"[i]}</span><span>${o.t}</span></button>`).join("")}</div>
+ <div id="fb" aria-live="polite"></div>
+ <div class="row"><button class="btn ghost small" data-act="speakQ">🔊 Læs spørgsmålet op</button></div></div>`;}
+function answer(b){if(cur.answered)return;cur.answered=true;stopSpeak();touchDay();
+ const it=cur.list[cur.i],o=it.opts[+b.dataset.i],btns=[...app.querySelectorAll(".opt")];
+ btns.forEach((x,i)=>{x.disabled=true;if(it.opts[i].ok&&!cur.exam)x.classList.add("right");});
+ track(it.q,o.ok);let gain=0;if(o.ok){cur.right++;cur.combo++;S.maxCombo=Math.max(S.maxCombo,cur.combo);gain=cur.mode==="wod"?5:2.5;if(cur.combo%3===0)gain+=2.5;if(!cur.exam){sfx.ok();if(cur.combo>=3&&cur.combo%3===0)confetti(18);}addKg(gain,cur.exam);}else{cur.combo=0;cur.wrong.push({it,picked:o.t});if(!cur.exam)sfx.no();}
+ checkBadges();
+ if(cur.exam){b.classList.add("picked");setTimeout(()=>{if(view==="quiz"&&cur.exam)nextQ();},300);return;}
+ if(!o.ok)b.classList.add("wrong");
+ let msg=o.ok?pick(GOOD)+(cur.combo%3===0?` Combo x${cur.combo}! 🔥`:""):pick(BAD),over=cur.i===cur.list.length-1;
+ if(cur.mode==="boss"){if(o.ok){const dmg=cur.combo>=3?2:1;cur.hp=Math.max(0,cur.hp-dmg);msg=dmg>1?"Kritisk slag! Dragen mister 2 HP 💥":"Slag! Dragen mister 1 HP ⚔️";}else{cur.hearts--;msg=pick(TAUNT);}
+  over=cur.hp<=0||cur.hearts<=0;const bb=app.querySelector(".boss");if(bb){bb.outerHTML=bossBar();const dr=app.querySelector(".drag");if(o.ok&&dr)dr.classList.add("hit");}}
+ document.getElementById("fb").innerHTML=`<div class="fb ${o.ok?"ok":"no"}"><p class="fbh">${msg}${o.ok?` <span class="gain">+${fmt(gain)} kg</span>`:""}</p><p>${it.q[3]}</p></div><button class="btn primary wide" data-act="nextQ">${over?"Se resultat":"Næste spørgsmål"}</button>`;}
+function nextQ(){cur.i++;if(cur.i>=cur.list.length||(cur.mode==="boss"&&(cur.hp<=0||cur.hearts<=0)))finish();else{question();window.scrollTo(0,0);}}
+function review(){const unanswered=cur.list.length-cur.i-(cur.i<cur.list.length&&cur.answered?1:0);
+ let h=`<section class="review"><h2>${cur.wrong.length?"Kig på dem her igen":"Ingen fejl – fejlfrit sæt! 🏆"}</h2>`;
+ cur.wrong.forEach(w=>{const c=w.it.opts.find(o=>o.ok).t;h+=`<div class="rv"><p class="q2">${w.it.q[0]}</p><p class="you">Du svarede: ${w.picked}</p><p class="corr">Rigtigt svar: ${c}</p><p class="ex">${w.it.q[3]}</p></div>`;});
+ if(cur.exam&&unanswered>0)h+=`<p class="meta">${unanswered} spørgsmål nåede du ikke – de tæller som forkerte.</p>`;
+ return h+"</section>";}
+function finish(){clearInterval(timerId);timerId=null;view="result";const n=cur.list.length,pct=Math.round(cur.right/n*100);
+ if(cur.mode){modeFinish(n);return;}
+ if(cur.exam){const score=Math.round(cur.right/n*1000),pass=score>=700;S.exam=Math.max(S.exam,score);save();if(pass){confetti(80);sfx.clang();}checkBadges();
+  app.innerHTML=`${topbar("Prøveeksamen")}<section class="result" style="--c:var(--ex)"><p class="big cond">${score}</p><p>af 1000 point – der kræves 700 for at bestå</p><h2>${pass?"Bestået! Du nærmer dig eksamensform 🏆":"Ikke helt endnu – men hvert sæt gør dig stærkere 💪"}</h2><p>${cur.right} af ${n} rigtige</p></section>${review()}
+  <div class="row"><button class="btn" data-go="home">Tilbage til oversigt</button><button class="btn primary" data-go="exam">Ny prøveeksamen</button></div>`;}
+ else{S.best[cur.d]=Math.max(S.best[cur.d],pct);if(pct===100){S.perfect++;confetti(70);sfx.clang();}save();checkBadges();const x=D[cur.d];
+  const msg=pct===100?"Fejlfrit sæt! 🏆":pct>=80?"Stærkt løft! Den her station sidder godt.":pct>=60?"God form – kig på fejlene og tag et sæt mere.":"Opvarmningen er i gang. Læs lektionerne igen, og prøv så igen.";
+  app.innerHTML=`${topbar(x.name)}<section class="result" style="--c:${x.color==="var(--d3)"?"var(--ink)":x.color}"><p class="big cond">${pct} %</p><p>${cur.right} af ${n} rigtige, stangen vejer nu ${fmt(S.kg)} kg</p><h2>${msg}</h2></section>${review()}
+  <div class="row"><button class="btn" data-go="lesson" data-d="${cur.d}">Læs lektionerne</button><button class="btn primary" data-go="quiz" data-d="${cur.d}">Tag et sæt mere</button></div>`;}
+ window.scrollTo(0,0);}
+
+/* flashcards */
+function startCards(d){cur={d,deck:shuffle(D[d].cards),flip:false,known:0,total:D[d].cards.length};card();}
+function card(){view="cards";const x=D[cur.d];
+ if(!cur.deck.length){if(!cur.counted){cur.counted=true;S.cardsDone++;save();confetti(50);sfx.badge();checkBadges();}app.innerHTML=`${topbar("Flashcards")}<section class="result"><h2>Alle ${cur.total} kort sidder i skabet! 🎉</h2><div class="row"><button class="btn" data-go="cards" data-d="${cur.d}">Bland og start igen</button><button class="btn primary" data-go="quiz" data-d="${cur.d}">Tag quizzen</button></div></section>`;return;}
+ const c=cur.deck[0];
+ app.innerHTML=`${topbar(`${cur.deck.length} kort tilbage`)}${prog(cur.known/cur.total,x.color)}
+ <button class="fc${cur.flip?" flipped":""}" data-act="flip" style="--c:${x.color}" aria-label="Vend kortet">${cur.flip?`<span class="term-sm">${c[0]}</span><span class="def">${c[1]}</span>`:`<span class="term cond">${c[0]}</span><span class="hint">Sig svaret højt, og tryk så for at vende</span>`}</button>
+ <div class="row">${cur.flip?`<button class="btn" data-act="again">Øv igen</button><button class="btn primary" data-act="know">Kan den</button>`:`<button class="btn" data-act="speakC">🔊 Læs op</button><button class="btn primary" data-act="flip">Vend kortet</button>`}</div>`;}
+
+/* sprint */
+function startSprint(){const pool=[];["d1","d2","d3"].forEach(k=>D[k].quiz.forEach(q=>pool.push({q,d:k})));
+ cur={sprint:true,list:shuffle(pool).map(p=>({...p,opts:mkOpts(p.q)})),i:0,right:0,wrong:0,combo:0,end:Date.now()+60000,lock:false};
+ timerId=setInterval(sprintTick,200);sprintQ();}
+function secsLeft(){return Math.max(0,Math.ceil((cur.end-Date.now())/1000));}
+function sprintTick(){const t=document.getElementById("sptime"),s=secsLeft();if(t){t.textContent=s;t.classList.toggle("hot",s<=10);}if(Date.now()>=cur.end)sprintEnd();}
+function sprintQ(){view="sprint";if(cur.i>=cur.list.length){cur.list=shuffle(cur.list);cur.i=0;}const it=cur.list[cur.i],s=secsLeft();
+ app.innerHTML=`${topbar("Sprint")}<p class="sp-time${s<=10?" hot":""}" id="sptime">${s}</p><p class="sp-score">${cur.right} rigtige${cur.combo>=3?` – combo x${cur.combo} 🔥`:""}${S.sprint?`, rekord ${S.sprint}`:""}</p>
+ <div class="qwrap" id="spq"><h2 class="q">${it.q[0]}</h2><div class="opts">${it.opts.map((o,i)=>`<button class="opt" data-act="spAns" data-i="${i}"><span class="let">${"ABCD"[i]}</span><span>${o.t}</span></button>`).join("")}</div></div>`;}
+function spAns(b){if(cur.lock||view!=="sprint")return;cur.lock=true;touchDay();const it=cur.list[cur.i],o=it.opts[+b.dataset.i];track(it.q,o.ok);
+ if(o.ok){cur.right++;cur.combo++;S.maxCombo=Math.max(S.maxCombo,cur.combo);sfx.ok();b.classList.add("right");addKg(2.5,true);}
+ else{cur.wrong++;cur.combo=0;cur.end-=3000;sfx.no();b.classList.add("wrong");document.getElementById("spq").classList.add("shake");app.querySelectorAll(".opt").forEach((x,i)=>{if(it.opts[i].ok)x.classList.add("right")});}
+ setTimeout(()=>{if(view!=="sprint")return;cur.lock=false;cur.i++;if(Date.now()<cur.end)sprintQ();else sprintEnd();},o.ok?250:800);}
+function sprintEnd(){if(view!=="sprint")return;clearInterval(timerId);timerId=null;view="result";const rec=cur.right>S.sprint;if(rec)S.sprint=cur.right;save();
+ if(rec&&cur.right>0){confetti(70);sfx.clang();}checkBadges();
+ app.innerHTML=`${topbar("Sprint")}<section class="result" style="--c:var(--d2)"><p class="big cond">${cur.right}</p><p>rigtige på 60 sekunder${cur.wrong?` – ${cur.wrong} forkerte kostede ${cur.wrong*3} sek.`:" – uden en eneste fejl!"}</p><h2>${rec&&cur.right>0?"Ny rekord! ⚡":"Rekorden er "+S.sprint+" – kan du slå den?"}</h2></section>
+ <div class="row"><button class="btn" data-go="home">Tilbage til oversigt</button><button class="btn primary" data-go="sprint">Sprint igen</button></div>`;window.scrollTo(0,0);}
+
+const REAL=[
+{d:"d1",t:"single",q:"Your company plans to migrate an on-premises line-of-business application to Azure. The application requires a specific third-party runtime to be installed on the operating system. Which cloud service type should you recommend?",o:["Infrastructure as a service (IaaS)","Platform as a service (PaaS)","Software as a service (SaaS)","Serverless computing"],a:0,e:"Når du skal installere noget specifikt på OS'et, skal du have kontrol over OS'et. Det giver kun IaaS."},
+{d:"d1",t:"multi",q:"Which two benefits does moving from an on-premises datacenter to a public cloud provide? Each correct answer presents a complete solution. Select two.",o:["Reduced capital expenditure","Physical access to the servers","The ability to scale resources on demand","Full control of the physical network"],a:[0,2],e:"Public cloud fjerner CapEx og giver skalering efter behov. Fysisk adgang og kontrol over netværket har du ikke."},
+{d:"d1",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["In the shared responsibility model, the customer is always responsible for the physical security of the datacenter.",false],["In a SaaS solution, the customer remains responsible for the data stored in the service.",true],["In a PaaS solution, Microsoft manages the operating system.",true]],e:"Fysisk sikkerhed er altid Microsofts. Data er altid kundens. I PaaS styrer Microsoft OS'et."},
+{d:"d1",t:"dd",q:"Select the answer that correctly completes the sentence.",pre:"Adding more virtual machines to an application in response to increased demand is an example of",o:["horizontal scaling","vertical scaling","fault tolerance","disaster recovery"],a:0,post:".",e:"Flere maskiner = horizontal scaling (scale out). Større maskine = vertical."},
+{d:"d1",t:"single",q:"A company wants to run code in response to events, pay only for the time the code runs, and avoid managing servers. What should the company use?",o:["Serverless computing","Virtual machines","A private cloud","Reserved instances"],a:0,e:"Hændelsesdrevet kode, betaling per kørsel og ingen servere at styre = serverless."},
+{d:"d1",t:"match",q:"Match each cloud model to the appropriate scenario. Select the cloud model for each scenario.",pairs:[["Public cloud","A startup needs resources quickly without buying any hardware."],["Private cloud","An organization must use infrastructure dedicated only to itself because of regulations."],["Hybrid cloud","A company keeps a legacy database on-premises and runs its web front end in Azure."]],extra:["Community cloud"],e:"Ingen hardware = public. Kun til én organisation = private. Blanding af on-prem og Azure = hybrid."},
+{d:"d1",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["Elasticity refers to the ability to automatically add or remove resources based on demand.",true],["High availability means that a service will never experience downtime.",false],["A service-level agreement (SLA) describes the guaranteed uptime of a service.",true]],e:"High availability betyder minimal nedetid – ikke nul nedetid. SLA'en fortæller, hvor meget oppetid der garanteres."},
+{d:"d1",t:"single",q:"You have a batch processing workload that can be interrupted and restarted at any time. You need to minimize compute costs. Which pricing option should you use?",o:["Azure Spot Virtual Machines","Reserved instances","Pay-as-you-go","Dedicated hosts"],a:0,e:"Spot VMs er billigst, men kan blive afbrudt. Perfekt, når opgaven kan tåle det."},
+{d:"d1",t:"dd",q:"Select the answer that correctly completes the sentence.",pre:"Purchasing physical servers for your own datacenter is an example of",o:["capital expenditure (CapEx)","operational expenditure (OpEx)","consumption-based pricing","a service-level agreement"],a:0,post:".",e:"Køb af fysisk udstyr på forhånd er CapEx."},
+{d:"d1",t:"multi",q:"Which two services are examples of platform as a service (PaaS)? Each correct answer presents a complete solution. Select two.",o:["Azure App Service","Azure SQL Database","Azure Virtual Machines","Microsoft 365"],a:[0,1],e:"App Service og Azure SQL Database er PaaS. VM'er er IaaS, og Microsoft 365 er SaaS."},
+{d:"d1",t:"single",q:"A company wants to ensure that all deployed resources comply with corporate standards by using templates and policies. Which cloud benefit does this describe?",o:["Governance","Elasticity","Predictability","Reliability"],a:0,e:"Skabeloner og politikker, der sikrer overholdelse af regler = governance."},
+{d:"d1",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["In IaaS, the customer is responsible for patching the operating system.",true],["SaaS requires the customer to manage the application runtime.",false],["A hybrid cloud can combine on-premises resources with public cloud resources.",true]],e:"I IaaS patcher du selv OS'et. I SaaS styrer Microsoft alt i applikationen."},
+{d:"d1",t:"single",q:"Which statement best describes the consumption-based model?",o:["You pay only for the resources that you use.","You pay a fixed monthly fee regardless of usage.","You must purchase hardware up front.","You pay per user for on-premises software licenses."],a:0,e:"Consumption-based = du betaler for forbrug, intet på forhånd."},
+{d:"d1",t:"match",q:"Match each service to the correct cloud service type. Select the service type for each Azure service.",pairs:[["IaaS","Azure Virtual Machines"],["PaaS","Azure App Service"],["SaaS","Microsoft 365"]],extra:["On-premises"],e:"VM'er = IaaS, App Service = PaaS, Microsoft 365 = SaaS."},
+{d:"d1",t:"dd",q:"Select the answer that correctly completes the sentence.",pre:"The ability of a system to recover from failures and continue to function is known as",o:["reliability","predictability","elasticity","manageability"],a:0,post:".",e:"At komme sig efter fejl og køre videre = reliability."},
+{d:"d1",t:"single",q:"An organization wants to manage its on-premises servers and servers hosted by another cloud provider from the Azure portal. What should the organization use?",o:["Azure Arc","Azure Migrate","Azure VMware Solution","Azure Data Box"],a:0,e:"Azure Arc udvider Azure-styring til ressourcer uden for Azure."},
+{d:"d1",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["Vertical scaling adds more virtual machines to a solution.",false],["Predictability in the cloud includes both cost predictability and performance predictability.",true],["Autoscaling is an example of management of the cloud.",true]],e:"Vertical scaling gør én maskine større. Predictability dækker pris og performance. Autoscaling er 'management of the cloud'."},
+{d:"d1",t:"multi",q:"Which two areas are always the responsibility of the customer, regardless of the cloud service type? Each correct answer presents a complete solution. Select two.",o:["Information and data","Accounts and identities","Physical hosts","Physical network"],a:[0,1],e:"Data og identiteter er altid kundens. Fysiske hosts og netværk er altid Microsofts."},
+{d:"d2",t:"single",q:"You need to deploy virtual machines so that the solution remains available if a single Azure datacenter fails. All the virtual machines must be in the same Azure region. What should you use?",o:["Availability zones","Region pairs","Resource groups","Management groups"],a:0,e:"Availability zones er adskilte datacentre inden for én region."},
+{d:"d2",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["A resource can exist in more than one resource group at the same time.",false],["Deleting a resource group deletes all the resources in it.",true],["Resource groups can be nested inside other resource groups.",false]],e:"En ressource ligger i præcis én gruppe, grupper kan ikke nestes, og sletning af gruppen sletter alt i den."},
+{d:"d2",t:"match",q:"Match each Azure component to the correct description. Select the component for each description.",pairs:[["Management group","Applies governance conditions across multiple subscriptions."],["Subscription","A unit of billing and access control."],["Resource group","A logical container for resources that share a lifecycle."]],extra:["Region"],e:"MG styrer på tværs af subscriptions. Subscription er grænse for fakturering. Resource group samler ressourcer."},
+{d:"d2",t:"single",q:"Your company must connect its on-premises network to Azure by using a private connection that does not travel over the public internet. What should you use?",o:["Azure ExpressRoute","Azure VPN Gateway","Virtual network peering","Azure DNS"],a:0,e:"ExpressRoute er privat. VPN Gateway er krypteret, men går over internettet."},
+{d:"d2",t:"multi",q:"You plan to deploy an Azure virtual machine. Which two resources are required? Each correct answer presents part of the solution. Select two.",o:["A virtual network","A managed disk","A public IP address","An Azure Policy definition"],a:[0,1],e:"En VM skal have netværk og en OS-disk. En offentlig IP er valgfri."},
+{d:"d2",t:"dd",q:"Select the answer that correctly completes the sentence.",pre:"To store a large number of images and videos that users access over HTTP, you should use Azure",o:["Blob storage","Queue storage","Table storage","Disk storage"],a:0,post:".",e:"Ustruktureret data som billeder og video = Blob storage."},
+{d:"d2",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["Zone-redundant storage (ZRS) replicates data across availability zones in the primary region.",true],["Locally redundant storage (LRS) copies data to a secondary region.",false],["Read-access geo-redundant storage (RA-GRS) lets you read data from the secondary region.",true]],e:"ZRS = zoner i primær region. LRS = ét datacenter. RA-GRS = læseadgang til sekundær region."},
+{d:"d2",t:"single",q:"You have 40 TB of data in an on-premises datacenter and a slow internet connection. You need to transfer the data to Azure Storage as quickly as possible. What should you use?",o:["Azure Data Box","AzCopy","Azure File Sync","Azure Storage Explorer"],a:0,e:"Store datamængder og langsomt net = Data Box, der sendes fysisk."},
+{d:"d2",t:"match",q:"Match each access tier to the correct scenario. Select the access tier for each scenario.",pairs:[["Hot","Data that is accessed frequently."],["Cool","Data that is accessed infrequently and stored for at least 30 days."],["Archive","Data that is rarely accessed and can tolerate several hours of retrieval latency."]],extra:["Premium"],e:"Hot = ofte, Cool = sjældent (30 dage), Archive = næsten aldrig og offline."},
+{d:"d2",t:"single",q:"You need to run a single containerized application without managing servers or a container orchestrator. What should you use?",o:["Azure Container Instances","Azure Kubernetes Service (AKS)","Azure Virtual Desktop","Azure Virtual Machine Scale Sets"],a:0,e:"ACI er den simpleste måde at køre én container på. AKS er orkestrering."},
+{d:"d2",t:"dd",q:"Select the answer that correctly completes the sentence.",pre:"To require users to perform multifactor authentication when they sign in from outside the corporate network, you should use Microsoft Entra",o:["Conditional Access","Connect","Domain Services","External ID"],a:0,post:".",e:"Conditional Access stiller krav baseret på signaler som lokation."},
+{d:"d2",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["Azure RBAC role assignments are inherited by child scopes.",true],["Zero Trust assumes that all traffic inside the corporate network can be trusted.",false],["The defense-in-depth model uses multiple layers of security.",true]],e:"RBAC nedarves. Zero Trust stoler aldrig automatisk på noget. Defense in depth = lag på lag."},
+{d:"d2",t:"multi",q:"Which two methods are examples of passwordless authentication? Each correct answer presents a complete solution. Select two.",o:["Windows Hello for Business","The Microsoft Authenticator app","A 16-character password","Security questions"],a:[0,1],e:"Windows Hello og Authenticator-appen er passwordless. Et langt password er stadig et password."},
+{d:"d2",t:"single",q:"A company wants users from a partner organization to access its applications by using their existing credentials. What should the company use?",o:["Microsoft Entra External ID (B2B collaboration)","Microsoft Entra Domain Services","Azure RBAC","Azure Policy"],a:0,e:"Partnere som gæster med egne logins = external identities (B2B)."},
+{d:"d2",t:"single",q:"You need a service that continuously assesses the security posture of your Azure and on-premises resources and provides recommendations to improve it. What should you use?",o:["Microsoft Defender for Cloud","Azure Monitor","Microsoft Purview","Azure Service Health"],a:0,e:"Defender for Cloud overvåger og forbedrer sikkerhedstilstanden, også hybrid."},
+{d:"d2",t:"match",q:"Match each Azure compute service to the correct description. Select the service for each description.",pairs:[["Azure Virtual Machines","Provides full control over the operating system."],["Azure Functions","Runs code in response to events and bills per execution."],["Azure App Service","Hosts web apps and APIs without managing infrastructure."],["Azure Kubernetes Service","Orchestrates and scales many containers."]],extra:["Azure Data Box"],e:"VM = fuld OS-kontrol. Functions = hændelser. App Service = webapps. AKS = mange containere."},
+{d:"d2",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["Virtual network peering can connect virtual networks in different Azure regions.",true],["Azure VPN Gateway sends encrypted traffic over the public internet.",true],["A single virtual network can span multiple Azure regions.",false]],e:"Global peering findes. VPN går krypteret over internettet. Et VNet ligger i én region."},
+{d:"d2",t:"dd",q:"Select the answer that correctly completes the sentence.",pre:"A private endpoint gives an Azure service",o:["a private IP address from your virtual network","a public IP address","a DNS zone","a site-to-site VPN connection"],a:0,post:".",e:"Private endpoint = privat IP i dit VNet."},
+{d:"d2",t:"single",q:"Which type of storage account is recommended for most scenarios and supports Blob, Files, Queue and Table storage?",o:["Standard general-purpose v2","Premium block blobs","Premium page blobs","Premium file shares"],a:0,e:"Standard v2 er den anbefalede type til de fleste scenarier."},
+{d:"d2",t:"single",q:"Azure rolls out planned updates to one region of a pair at a time, and prioritizes recovery of one region in the pair during a broad outage. Which feature does this describe?",o:["Region pairs","Availability zones","Sovereign regions","Availability sets"],a:0,e:"Det er netop det, region pairs giver."},
+{d:"d2",t:"single",q:"You need to synchronize an on-premises Windows file server with Azure Files and keep frequently accessed files cached locally. What should you use?",o:["Azure File Sync","AzCopy","Azure Data Box","Azure Migrate"],a:0,e:"Azure File Sync gør din filserver til en lokal cache af Azure Files."},
+{d:"d2",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["Availability sets protect virtual machines against the failure of an entire Azure region.",false],["Update domains ensure that not all virtual machines are rebooted at the same time during planned maintenance.",true],["Virtual Machine Scale Sets can automatically increase the number of VMs based on demand.",true]],e:"Availability sets beskytter mod fejl i racks og vedligehold – ikke hele regioner."},
+{d:"d2",t:"single",q:"An application requires LDAP and Kerberos authentication. You want to avoid deploying and managing domain controllers in Azure. What should you use?",o:["Microsoft Entra Domain Services","Microsoft Entra Connect","Conditional Access","Azure RBAC"],a:0,e:"Entra Domain Services giver LDAP og Kerberos som en administreret service."},
+{d:"d2",t:"dd",q:"Select the answer that correctly completes the sentence.",pre:"Before you can read a blob that is stored in the Archive tier, you must",o:["rehydrate","replicate","redeploy","reserve"],a:0,post:"the blob.",e:"Archive-data skal rehydreres til et online tier først."},
+{d:"d2",t:"single",q:"Which Azure service delivers a Windows desktop and applications from the cloud to users on any device?",o:["Azure Virtual Desktop","Azure App Service","Azure Container Instances","Azure Arc"],a:0,e:"Azure Virtual Desktop leverer skriveborde fra skyen."},
+{d:"d2",t:"multi",q:"You plan to move on-premises servers and a large amount of data to Azure. Which two services should you use? Each correct answer presents part of the solution. Select two.",o:["Azure Migrate","Azure Data Box","Azure Advisor","Azure Policy"],a:[0,1],e:"Azure Migrate til servere og Data Box til store datamængder."},
+{d:"d3",t:"single",q:"You need to estimate the monthly cost of an Azure solution before you deploy it. What should you use?",o:["The pricing calculator","Microsoft Cost Management","Azure Advisor","Azure Service Health"],a:0,e:"Pricing calculator estimerer omkostninger på forhånd."},
+{d:"d3",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["A resource lock can prevent a user who has the Owner role from deleting a resource.",true],["A ReadOnly lock allows users to modify a resource but not delete it.",false],["Tags are automatically inherited by the resources in a resource group.",false]],e:"Låse gælder også Owner. ReadOnly tillader kun læsning. Tags nedarves ikke automatisk."},
+{d:"d3",t:"match",q:"Match each governance feature to the correct purpose. Select the feature for each purpose.",pairs:[["Azure Policy","Enforce rules such as allowed regions for new resources."],["Resource locks","Prevent accidental deletion or modification of resources."],["Tags","Organize resources and track costs by department."],["Microsoft Purview","Discover and classify data across on-premises, multicloud and SaaS sources."]],extra:["Azure Arc"],e:"Policy = regler. Locks = beskyttelse mod uheld. Tags = organisering. Purview = data governance."},
+{d:"d3",t:"single",q:"A virtual machine is unavailable. You need to determine whether the issue is caused by a problem with the Azure platform that affects this specific virtual machine. What should you use?",o:["Azure Resource Health","Azure Advisor","Azure Policy","Microsoft Cost Management"],a:0,e:"Resource Health viser helbredet for én bestemt ressource."},
+{d:"d3",t:"multi",q:"Which two factors affect the cost of an Azure virtual machine? Each correct answer presents a complete solution. Select two.",o:["The Azure region","The size of the virtual machine","The name of the resource group","The number of tags assigned to the virtual machine"],a:[0,1],e:"Region og størrelse påvirker prisen. Navne og tags er gratis."},
+{d:"d3",t:"dd",q:"Select the answer that correctly completes the sentence.",pre:"To receive personalized recommendations for reducing costs and improving the reliability of your Azure resources, you should use",o:["Azure Advisor","Azure Monitor","Azure Arc","Azure Policy"],a:0,post:".",e:"Advisor giver personlige anbefalinger i fem kategorier."},
+{d:"d3",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["Azure Cloud Shell can be accessed from a web browser.",true],["Azure Cloud Shell supports both Bash and PowerShell.",true],["You must install the Azure CLI on your computer before you can use Cloud Shell.",false]],e:"Cloud Shell kører i browseren med Bash eller PowerShell – intet skal installeres."},
+{d:"d3",t:"single",q:"You need to repeatedly deploy identical environments by using declarative templates that can be stored in source control. What should you use?",o:["ARM templates or Bicep files","Azure Advisor","Azure Service Health","Microsoft Purview"],a:0,e:"ARM templates og Bicep er Infrastructure as Code."},
+{d:"d3",t:"match",q:"Match each monitoring feature to the correct scenario. Select the feature for each scenario.",pairs:[["Azure Monitor alerts","Notify an administrator when CPU usage exceeds 90 percent."],["Log Analytics","Write queries to analyze collected log data."],["Application Insights","Monitor the performance and failures of a web application."]],extra:["Azure DNS"],e:"Alerts = besked ved grænser. Log Analytics = KQL-forespørgsler. Application Insights = apps."},
+{d:"d3",t:"single",q:"Requests to create, update or delete Azure resources from the Azure portal, Azure CLI or REST API are all processed by which service?",o:["Azure Resource Manager","Azure Arc","Microsoft Entra ID","Azure Monitor"],a:0,e:"Alle forespørgsler går gennem Azure Resource Manager."},
+{d:"d3",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["Azure Service Health shows service issues that affect the services and regions that you use.",true],["Azure status provides a global view of the health of Azure services.",true],["Azure Advisor charges a fee for each recommendation.",false]],e:"Service Health = dine services. Azure status = globalt. Advisor er gratis."},
+{d:"d3",t:"dd",q:"Select the answer that correctly completes the sentence.",pre:"Data transferred into Azure datacenters (ingress) is typically",o:["free","charged at a premium rate per GB","charged only for storage accounts","billed as a reserved instance"],a:0,post:".",e:"Ingress er typisk gratis. Egress koster."},
+{d:"d3",t:"single",q:"You need to ensure that only virtual machines of approved sizes can be deployed in a subscription. What should you use?",o:["Azure Policy","Azure RBAC","Resource locks","Tags"],a:0,e:"Regler for, hvordan ressourcer må være = Azure Policy."},
+{d:"d3",t:"multi",q:"Which two capabilities are provided by Microsoft Cost Management? Each correct answer presents a complete solution. Select two.",o:["Budgets and cost alerts","Cost analysis of actual spending","Blocking deployments to unapproved regions","Hosting web applications"],a:[0,1],e:"Cost Management giver budgetter, alarmer og analyse. Blokering af regioner er Azure Policy."},
+{d:"d3",t:"single",q:"Which tool lets you manage Azure resources by using a graphical, web-based interface?",o:["The Azure portal","Azure CLI","Azure PowerShell","AzCopy"],a:0,e:"Portalen er den grafiske brugerflade."},
+{d:"d3",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["Azure Arc can extend Azure management to Kubernetes clusters that run outside Azure.",true],["Infrastructure as code helps reduce manual configuration errors.",true],["ARM templates are written in YAML.",false]],e:"ARM templates skrives i JSON. Bicep er et enklere sprog, der oversættes til ARM."},
+{d:"d3",t:"single",q:"A company wants to group several Azure Policy definitions to achieve a single compliance goal. What should the company create?",o:["A policy initiative","A management group","A resource lock","A tag"],a:0,e:"En samling af policies kaldes et initiative."},
+{d:"d3",t:"dd",q:"Select the answer that correctly completes the sentence.",pre:"Azure Monitor collects two fundamental types of data: metrics and",o:["logs","tags","locks","policies"],a:0,post:".",e:"Azure Monitor arbejder med metrics og logs."},
+{d:"d3",t:"single",q:"You want to receive a notification when your Azure spending reaches 80 percent of a set amount. What should you configure?",o:["A budget in Microsoft Cost Management","A resource lock","An Azure Policy assignment","A Service Health alert"],a:0,e:"Budgetter i Cost Management kan sende alarmer ved fx 80 %."},
+{d:"d3",t:"match",q:"Match each option to the correct purpose. Select the option for each purpose.",pairs:[["Pricing calculator","Estimate costs before you deploy resources."],["Microsoft Cost Management","Analyze actual spending and set budgets."],["Reserved instances","Reduce costs for workloads that run continuously for one or three years."]],extra:["Azure Arc"],e:"Calculator = før. Cost Management = efter. Reserved = rabat for binding."},
+{d:"d3",t:"yn",q:"For each of the following statements, select Yes if the statement is true. Otherwise, select No.",s:[["Microsoft Purview can help discover and classify sensitive data.",true],["Azure Policy can automatically remediate some non-compliant resources.",true],["Resource locks and Azure RBAC roles are the same feature.",false]],e:"Purview klassificerer data. Policy kan rette op. Locks og RBAC er to forskellige ting."},
+{d:"d3",t:"multi",q:"Which two command-line tools can you use to manage Azure resources? Each correct answer presents a complete solution. Select two.",o:["Azure CLI","Azure PowerShell","Azure Advisor","Azure Service Health"],a:[0,1],e:"Azure CLI og Azure PowerShell er kommandolinjeværktøjer."}
+];
+function realIntro(){view="realintro";app.innerHTML=`${topbar("Realistisk eksamen")}<section class="lesson" style="--c:var(--ex)"><h2>Realistisk eksamen</h2><div class="body"><p>Bygget som den rigtige eksamen:</p><ul><li><b>40 opgaver på engelsk</b> i samme stil som Microsofts egne, fordelt efter eksamens vægtning.</li><li><b>Fem opgavetyper:</b> ét svar, flere svar, Yes/No-påstande, match og sætninger, der skal fuldføres.</li><li><b>Ingen facit undervejs.</b> Du kan gå frem og tilbage, markere opgaver med 🚩 og se en oversigt, før du afslutter.</li><li><b>Yes/No-opgaver låses 🔒</b>, når du forlader dem – ligesom i den rigtige eksamen.</li><li><b>Delvise point</b> på opgaver med flere dele. Du skal have 700 for at bestå.</li></ul><p>Bagefter får du din score, din præstation per område og forklaringer på dansk.</p></div><label class="auto"><input type="checkbox" id="xtra"> Tilføj 30 minutter (sprogtillæg, fordi eksamen ikke er på dit modersmål)</label></section><div class="row"><button class="btn primary" data-act="realStart">Start eksamen (45 min)</button></div>`;}
+function startReal(){const x=document.getElementById("xtra"),extra=!!(x&&x.checked),pk=[];
+ [["d1",11],["d2",15],["d3",14]].forEach(([d,n])=>shuffle(REAL.filter(r=>r.d===d)).slice(0,n).forEach(r=>pk.push(r)));
+ const items=shuffle(pk).map(r=>{const it={...r};if(r.o)it.ord=shuffle(r.o.map((_,i)=>i));if(r.t==="match"){it.choices=shuffle(r.pairs.map(p=>p[0]).concat(r.extra||[]));it.rows=shuffle(r.pairs.map((_,i)=>i));}return it;});
+ cur={real:true,items,ans:items.map(it=>it.t==="multi"?[]:it.t==="yn"?it.s.map(()=>null):it.t==="match"?it.pairs.map(()=>""):null),mark:items.map(()=>false),lock:items.map(()=>false),i:0,end:Date.now()+(extra?75:45)*60e3};
+ timerId=setInterval(realTick,1000);realQ();window.scrollTo(0,0);}
+function rTime(){const s=Math.max(0,Math.round((cur.end-Date.now())/1000));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
+function realTick(){const t=document.getElementById("rtime");if(t)t.textContent=rTime();if(Date.now()>=cur.end){toast("Tiden er gået – eksamen afsluttes");realSubmit();}}
+function realHead(label){return `<div class="vxhead"><span>AZ-900</span><span>${label}</span><span id="rtime" class="timer">${rTime()}</span></div>`;}
+function answered(i){const a=cur.ans[i],it=cur.items[i];if(it.t==="multi")return a.length===it.a.length;if(it.t==="yn")return a.every(v=>v!==null);if(it.t==="match")return a.every(v=>v);return a!==null;}
+function realQ(){view="real";const i=cur.i,it=cur.items[i],a=cur.ans[i],L=cur.lock[i],dis=L?"disabled":"";let body=L?`<p class="warn">This question is locked. You can no longer change your answer.</p>`:"";
+ if(it.t==="single"||it.t==="multi"){const m=it.t==="multi";body+=`<div class="opts">`+it.ord.map(k=>`<label class="ropt"><input type="${m?"checkbox":"radio"}" name="r" data-rt="${it.t}" value="${k}" ${(m?a.includes(k):a===k)?"checked":""} ${dis}><span>${it.o[k]}</span></label>`).join("")+`</div>`;}
+ else if(it.t==="yn"){body+=(L?"":`<p class="warn">Once you leave this question, you will not be able to return to it.</p>`)+`<div class="yn"><div class="ynh"><span>Statements</span><span>Yes</span><span>No</span></div>`+it.s.map((st,k)=>`<div class="ynr"><span>${st[0]}</span>${[true,false].map(v=>`<label class="ync"><input type="radio" name="yn${k}" data-rt="yn" data-k="${k}" value="${v}" ${a[k]===v?"checked":""} ${dis} aria-label="${v?"Yes":"No"}"></label>`).join("")}</div>`).join("")+`</div>`;}
+ else if(it.t==="match"){body+=`<div class="mt">`+it.rows.map(k=>`<div class="mtr"><span>${it.pairs[k][1]}</span><select data-rt="match" data-k="${k}" ${dis}><option value="">Select…</option>${it.choices.map(c=>`<option ${a[k]===c?"selected":""}>${c}</option>`).join("")}</select></div>`).join("")+`</div>`;}
+ else if(it.t==="dd"){body+=`<p class="ddp">${it.pre} <select data-rt="dd" ${dis}><option value="">Select…</option>${it.ord.map(k=>`<option value="${k}" ${a===k?"selected":""}>${it.o[k]}</option>`).join("")}</select> ${it.post||""}</p>`;}
+ app.innerHTML=`${realHead(`Question ${i+1} of ${cur.items.length}`)}<section class="vx"><h2 class="rq">${it.q}</h2>${body}</section>
+ <label class="auto"><input type="checkbox" id="rmark" ${cur.mark[i]?"checked":""}> 🚩 Mark for review</label>
+ <div class="row"><button class="btn" data-act="rPrev" ${i===0?"disabled":""}>Previous</button><button class="btn" data-act="rReview">Review</button><button class="btn primary" data-act="rNext">${i===cur.items.length-1?"Review answers":"Next"}</button></div>`;}
+function rLeave(){if(cur.items[cur.i].t==="yn")cur.lock[cur.i]=true;}
+function realReview(){view="real";const un=cur.items.filter((_,i)=>!answered(i)).length,mk=cur.mark.filter(Boolean).length;
+ app.innerHTML=`${realHead("Review")}<section class="vx"><h2 class="rq">Review your answers</h2><p class="meta">${un} unanswered, ${mk} marked for review. Tap a number to go to that question. 🔒 = locked.</p><div class="grid">${cur.items.map((_,i)=>`<button class="rv-b${answered(i)?" done":""}${cur.mark[i]?" mk":""}" data-act="rGo" data-i="${i}">${i+1}${cur.mark[i]?"🚩":""}${cur.lock[i]?"🔒":""}</button>`).join("")}</div></section>
+ <div class="row"><button class="btn" data-go="home">Afbryd</button><button class="btn primary" data-act="rSubmit">End exam</button></div>`;window.scrollTo(0,0);}
+function itemScore(it,a){if(it.t==="single"||it.t==="dd")return a===it.a?1:0;
+ if(it.t==="multi"){const c=a.filter(x=>it.a.includes(x)).length;return Math.max(0,c-(a.length-c))/it.a.length;}
+ if(it.t==="yn")return it.s.filter((st,k)=>a[k]===st[1]).length/it.s.length;
+ return it.pairs.filter((p,k)=>a[k]===p[0]).length/it.pairs.length;}
+function ansText(it,a,right){if(it.t==="single"||it.t==="dd"){const v=right?it.a:a;return v===null?"(ikke besvaret)":it.o[v];}
+ if(it.t==="multi"){const v=right?it.a:a;return v.length?v.map(k=>it.o[k]).join(" + "):"(ikke besvaret)";}
+ if(it.t==="yn")return it.s.map((st,k)=>{const v=right?st[1]:a[k];return `${st[0]} → ${v===null?"?":v?"Yes":"No"}`;}).join("<br>");
+ return it.pairs.map((p,k)=>`${p[1]} → ${right?p[0]:(a[k]||"?")}`).join("<br>");}
+function realSubmit(){if(view!=="real")return;clearInterval(timerId);timerId=null;view="result";const per={d1:[0,0],d2:[0,0],d3:[0,0]};let tot=0;
+ const sc=cur.items.map((it,i)=>{const s=itemScore(it,cur.ans[i]);per[it.d][0]+=s;per[it.d][1]++;tot+=s;return s;});
+ const n=cur.items.length,score=Math.round(tot/n*1000),pass=score>=700;S.real=Math.max(S.real||0,score);touchDay();addKg(Math.round(tot)*2.5,true);save();if(pass){confetti(90);sfx.clang();}else sfx.no();checkBadges();
+ const bars=["d1","d2","d3"].map(d=>{const f=per[d][1]?per[d][0]/per[d][1]:0;return `<div class="rrow"><span>${D[d].name}</span><span>${Math.round(f*100)} %</span></div>${prog(f,D[d].color)}`;}).join("");
+ const wrong=cur.items.map((it,i)=>({it,i,s:sc[i]})).filter(x=>x.s<1);
+ const rv=wrong.map(({it,i,s})=>`<div class="rv"><p class="q2">${i+1}. ${it.t==="dd"?it.pre+" ___ "+(it.post||""):it.q}</p><p class="you"><b>${s>0?"Delvist rigtigt":"Forkert"}.</b> Dit svar:<br>${ansText(it,cur.ans[i],false)}</p><p class="corr">Rigtigt svar:<br>${ansText(it,null,true)}</p><p class="ex">${it.e}</p></div>`).join("");
+ app.innerHTML=`${topbar("Realistisk eksamen")}<section class="result" style="--c:${pass?"var(--ok)":"var(--ex)"}"><p class="big cond">${score}</p><p>af 1000 point – der kræves 700 for at bestå</p><h2>${pass?"Bestået! 🎓":"Ikke bestået endnu 💪"}</h2><p>${score>=800?"Du er i eksamensform. Tag Microsofts practice assessment, og book så eksamen!":pass?"Flot! Sigt efter 800+ for at have margin på eksamensdagen.":"Se dine fejl nedenfor, genoptræn de svage områder, og prøv igen."}</p></section>
+ <section class="ready"><h2>Din præstation per område</h2><p class="meta">Ligesom scorerapporten fra den rigtige eksamen.</p>${bars}</section>
+ <section class="review"><h2>${wrong.length?`Gennemgang af ${wrong.length} opgaver`:"Alt rigtigt – fejlfrit! 🏆"}</h2>${rv}</section>
+ <div class="row"><button class="btn" data-go="home">Tilbage til oversigt</button><button class="btn primary" data-go="real">Ny realistisk eksamen</button></div>`;window.scrollTo(0,0);}
+
+/* routing */
+function go(v,d){document.querySelectorAll(".lvl").forEach(e=>e.remove());clearInterval(timerId);timerId=null;stopSpeak();auto=false;window.scrollTo(0,0);
+ if(v==="home")home();
+ else if(v==="lesson")lessonMap(d);
+ else if(v==="quiz")startQuiz(d,false);
+ else if(v==="exam")startQuiz(null,true);
+ else if(v==="cards")startCards(d);
+ else if(v==="sprint")startSprint();
+ else if(v==="wod"||v==="retry"||v==="boss")startMode(v);
+ else if(v==="syl")syllabus();
+ else if(v==="real")realIntro();}
+const actions={
+ prev(){if(cur.i>0){cur.i--;stopSpeak();lesson();}},
+ next(){cur.i++;stopSpeak();lesson();window.scrollTo(0,0);},
+ speakL(){speakLesson();},
+ answer(b){answer(b);},
+ nextQ(){nextQ();},
+ speakQ(){const it=cur.list[cur.i];speak(strip(it.q[0]+" "+it.opts.map((o,i)=>"ABCD"[i]+": "+o.t+".").join(" ")));},
+ flip(){cur.flip=!cur.flip;stopSpeak();card();},
+ know(){cur.deck.shift();cur.known++;cur.flip=false;card();},
+ again(){cur.deck.push(cur.deck.shift());cur.flip=false;card();},
+ speakC(){speak(cur.deck[0][0]);},
+ spAns(b){spAns(b);},
+ closeLvl(b){b.remove();},
+ coach(b){coachI=(coachI+1)%COACH.length;b.querySelector('.bub').innerHTML='<span class="who">Coach Kumulus</span>'+COACH[coachI];},
+ snd(b){S.sound=!S.sound;save();b.textContent=S.sound?'🔊':'🔇';b.setAttribute('aria-label',S.sound?'Slå lyd fra':'Slå lyd til');if(S.sound)sfx.ok();},
+ realStart(){startReal();},
+ rPrev(){rLeave();cur.i--;realQ();window.scrollTo(0,0);},
+ rNext(){rLeave();if(cur.i<cur.items.length-1){cur.i++;realQ();window.scrollTo(0,0);}else realReview();},
+ rReview(){rLeave();realReview();},
+ rGo(b){cur.i=+b.dataset.i;realQ();window.scrollTo(0,0);},
+ rSubmit(b){if(!b.dataset.armed){b.dataset.armed="1";b.textContent="Tryk igen for at afslutte";return;}realSubmit();},
+ openL(b){cur={d:cur.d,i:+b.dataset.i};lesson();window.scrollTo(0,0);},
+ term(b){const t=decodeURIComponent(b.dataset.t);for(const d of ["d1","d2","d3"]){const c=D[d].cards.find(c=>c[0]===t);if(c){showSheet(c[0],c[1]);break;}}},
+ closeSheet(b){b.remove();},
+ fs(b){S.fs=Math.min(23,Math.max(15,(S.fs||17)+(+b.dataset.v)));save();const a=app.querySelector("article.lesson");if(a)a.style.fontSize=S.fs+"px";},
+ lq(b){const c=cur.lq;if(!c||c.done)return;c.done=true;const o=c.opts[+b.dataset.i],k=cur.d+"-"+cur.i;track(c.q,o.ok);touchDay();
+  app.querySelectorAll(".qc .opt").forEach((e,j)=>{e.disabled=true;if(c.opts[j].ok)e.classList.add("right");});
+  if(o.ok){sfx.ok();confetti(24);const first=!S.lq[k];S.lq[k]=1;if(first)addKg(2.5,true);save();}else{b.classList.add("wrong");sfx.no();}
+  document.getElementById("lqfb").innerHTML=`<div class="fb ${o.ok?"ok":"no"}"><p class="fbh">${o.ok?"Stjerne til dig! ⭐"+(S.lq[k]?' <span class="gain">+2,5 kg</span>':""):"Tæt på! Kig lige på lektionen igen 👀"}</p><p>${c.q[3]}</p></div>`;checkBadges();},
+ reset(b){if(b.dataset.armed){S=FRESH();save();home();}else{b.dataset.armed="1";b.textContent="Tryk igen for at nulstille alt";}}
+};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-go],[data-act]");if(!b||b.disabled)return;
+ if(b.dataset.go){go(b.dataset.go,b.dataset.d);return;}const f=actions[b.dataset.act];if(f)f(b);});
+document.addEventListener("change",e=>{const rt=e.target.dataset&&e.target.dataset.rt;
+ if(rt&&cur.real){const it=cur.items[cur.i];if(rt==="single")cur.ans[cur.i]=+e.target.value;
+  else if(rt==="multi"){const v=+e.target.value,arr=cur.ans[cur.i];if(e.target.checked){if(arr.length>=it.a.length){e.target.checked=false;toast(`Vælg højst ${it.a.length} svar`);return;}arr.push(v);}else cur.ans[cur.i]=arr.filter(x=>x!==v);}
+  else if(rt==="yn")cur.ans[cur.i][+e.target.dataset.k]=e.target.value==="true";
+  else if(rt==="match")cur.ans[cur.i][+e.target.dataset.k]=e.target.value;
+  else if(rt==="dd")cur.ans[cur.i]=e.target.value===""?null:+e.target.value;return;}
+ if(e.target.id==="rmark"){cur.mark[cur.i]=e.target.checked;return;}
+ if(e.target.id==="xtra"){const b=app.querySelector('[data-act="realStart"]');if(b)b.textContent=`Start eksamen (${e.target.checked?75:45} min)`;return;}const sy=e.target.dataset&&e.target.dataset.syl;if(sy){if(e.target.checked)S.syl[sy]=1;else delete S.syl[sy];save();const b=app.querySelector(".lesson b");if(b)b.textContent=`${sylDone()} af ${SYLN}`;const pb=app.querySelector(".lesson .prog div");if(pb)pb.style.width=Math.round(sylDone()/SYLN*100)+"%";if(sylDone()===SYLN){confetti(80);sfx.clang();toast("Hele pensum er på plads! 🎓");}return;}if(e.target.id==="auto"){auto=e.target.checked;if(auto)speakLesson();else stopSpeak();}});
+if(synth&&synth.onvoiceschanged!==undefined)synth.onvoiceschanged=()=>{};
+home();
+</script>
+</body>
+</html>
